@@ -7,20 +7,20 @@
 
 // Store loaded tasks globally within this script's scope to access for editing
 let currentTasks = [];
+// Store the currently active status filter
+let currentStatusFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Only run task-specific code if we are on the dashboard
     const taskListContainer = document.getElementById('task-list-container');
     const addTaskForm = document.getElementById('add-task-form');
-    const filterStatus = document.getElementById('filter-status');
-    const filterPriority = document.getElementById('filter-priority');
     const searchTermInput = document.getElementById('search-term');
-    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+    const sidebarNav = document.querySelector('.sidebar-nav'); // Get sidebar nav container
 
     if (taskListContainer) {
         console.log('Tasks JS Loaded');
         loadTasks(); // Initial load (fetches all tasks into currentTasks)
-        setupEventListeners(taskListContainer, addTaskForm, filterStatus, filterPriority, searchTermInput, clearFiltersBtn); // Pass filter elements
+        setupEventListeners(taskListContainer, addTaskForm, sidebarNav, searchTermInput); // Pass relevant elements
     } else {
         console.log('Task list container not found, Tasks JS not fully initialized.');
     }
@@ -38,60 +38,51 @@ async function loadTasks() {
     try {
         const response = await fetch('api/tasks/read.php'); // GET request by default
         if (!response.ok) {
-            // Handle non-OK responses (like 401 Unauthorized)
             if (response.status === 401) {
                  console.error('Authentication error loading tasks.');
                  showMessage('task-list-container', 'Authentication error. Please login again.', 'error');
-                 // Optionally redirect to login
-                 // window.location.href = 'login.php';
-                 return; // Stop further processing
+                 return;
             }
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
 
         if (result.success) {
-            currentTasks = result.tasks; // Store tasks globally
-            // Apply filters *after* fetching all tasks
+            currentTasks = result.tasks;
             applyFiltersAndDisplay(); // Display initially filtered (or all) tasks
         } else {
-            currentTasks = []; // Clear tasks on error
+            currentTasks = [];
             console.error("API error loading tasks:", result.message);
             showMessage('task-list-container', `Failed to load tasks: ${result.message}`, 'error');
-            displayTasks([]); // Display empty state
+            displayTasks([]);
         }
     } catch (error) {
         console.error("Could not load tasks:", error);
         showMessage('task-list-container', `Error loading tasks: ${error.message}.`, 'error');
-        displayTasks([]); // Display empty state
+        displayTasks([]);
     }
 }
 
 /**
- * Displays tasks grouped by status in the UI.
+ * Displays tasks grouped by status in the UI and updates sidebar stats.
  * @param {Array} tasks Array of task objects to display (potentially filtered).
  */
 function displayTasks(tasks) {
     const container = document.getElementById('task-list-container');
     if (!container) return;
 
-    container.innerHTML = ''; // Clear loading message or previous tasks
+    container.innerHTML = ''; // Clear
 
-    // Group tasks
     const pendingTasks = tasks.filter(task => task.status === 'pending');
     const completedTasks = tasks.filter(task => task.status === 'completed');
 
-    // Create sections for pending and completed tasks
     const pendingSection = document.createElement('div');
     pendingSection.id = 'pending-tasks';
     pendingSection.innerHTML = '<h3>Pending</h3>';
     const pendingGrid = document.createElement('div');
     pendingGrid.className = 'task-grid';
-    if (pendingTasks.length === 0) {
-        // Add message directly to section if grid is empty
-         if (!container.querySelector('.no-tasks-message')) { // Check if overall container is empty first
-             pendingSection.innerHTML += '<p class="no-tasks-message">No pending tasks.</p>';
-         }
+    if (pendingTasks.length === 0 && currentStatusFilter !== 'completed') { // Show message only if not specifically filtering completed
+        pendingSection.innerHTML += '<p class="no-tasks-message">No pending tasks.</p>';
     } else {
         pendingTasks.forEach(task => pendingGrid.appendChild(createTaskElement(task)));
         pendingSection.appendChild(pendingGrid);
@@ -102,38 +93,54 @@ function displayTasks(tasks) {
     completedSection.innerHTML = '<h3>Completed</h3>';
     const completedGrid = document.createElement('div');
     completedGrid.className = 'task-grid';
-     if (completedTasks.length === 0) {
-         if (!container.querySelector('.no-tasks-message')) {
-            completedSection.innerHTML += '<p class="no-tasks-message">No completed tasks.</p>';
-         }
+     if (completedTasks.length === 0 && currentStatusFilter !== 'pending') { // Show message only if not specifically filtering pending
+        completedSection.innerHTML += '<p class="no-tasks-message">No completed tasks.</p>';
     } else {
         completedTasks.forEach(task => completedGrid.appendChild(createTaskElement(task)));
         completedSection.appendChild(completedGrid);
     }
 
-    // Only add sections if they contain tasks or if there are no tasks at all
     if (tasks.length === 0) {
          container.innerHTML = '<p class="no-tasks-message">No tasks match the current filters.</p>';
     } else {
-        container.appendChild(pendingSection);
-        container.appendChild(completedSection);
+        // Only append sections if they are relevant to the current filter or 'all'
+        if (currentStatusFilter === 'all' || currentStatusFilter === 'pending') {
+             if (pendingTasks.length > 0 || currentStatusFilter === 'pending') container.appendChild(pendingSection);
+        }
+         if (currentStatusFilter === 'all' || currentStatusFilter === 'completed') {
+             if (completedTasks.length > 0 || currentStatusFilter === 'completed') container.appendChild(completedSection);
+         }
     }
 
+    updateSidebarStats(); // Update stats based on ALL tasks
 
-    // Apply staggered load animation to newly displayed cards
     if (typeof applyStaggeredAnimation === 'function') {
-        // Apply to cards within the grids
         applyStaggeredAnimation('#pending-tasks .task-grid .task-card', 'task-card-load-animation', 0.05);
         applyStaggeredAnimation('#completed-tasks .task-grid .task-card', 'task-card-load-animation', 0.05);
     } else {
-        console.warn('applyStaggeredAnimation function not found. Skipping card load animations.');
+        console.warn('applyStaggeredAnimation function not found.');
     }
 }
 
 /**
+ * Updates the task count statistics in the sidebar based on the global currentTasks.
+ */
+function updateSidebarStats() {
+    const totalTasks = currentTasks.length;
+    const totalPending = currentTasks.filter(task => task.status === 'pending').length;
+    const totalCompleted = currentTasks.filter(task => task.status === 'completed').length;
+
+    const statsTotalEl = document.getElementById('stats-total');
+    const statsPendingEl = document.getElementById('stats-pending');
+    const statsCompletedEl = document.getElementById('stats-completed');
+
+    if (statsTotalEl) statsTotalEl.textContent = totalTasks;
+    if (statsPendingEl) statsPendingEl.textContent = totalPending;
+    if (statsCompletedEl) statsCompletedEl.textContent = totalCompleted;
+}
+
+/**
  * Creates the HTML element for a single task.
- * @param {object} task The task object.
- * @returns {HTMLElement} The task card element.
  */
 function createTaskElement(task) {
     const taskElement = document.createElement('div');
@@ -142,8 +149,6 @@ function createTaskElement(task) {
 
     const title = (typeof escapeHTML === 'function' ? escapeHTML(task.title) : task.title) || 'Untitled Task';
     const description = (typeof escapeHTML === 'function' ? escapeHTML(task.description || '') : (task.description || ''));
-
-    // Add completion animation class if task is completed
     const titleClass = task.status === 'completed' ? 'task-title task-complete-animation' : 'task-title';
 
     taskElement.innerHTML = `
@@ -171,7 +176,7 @@ function createTaskElement(task) {
 /**
  * Sets up event listeners for task interactions.
  */
-function setupEventListeners(taskContainer, addTaskForm, filterStatus, filterPriority, searchTermInput, clearFiltersBtn) {
+function setupEventListeners(taskContainer, addTaskForm, sidebarNav, searchTermInput) {
     // Add Task Form Submission
     addTaskForm?.addEventListener('submit', handleAddTask);
 
@@ -192,58 +197,55 @@ function setupEventListeners(taskContainer, addTaskForm, filterStatus, filterPri
         }
     });
 
-    // Filter controls listeners
-    filterStatus?.addEventListener('change', applyFiltersAndDisplay);
-    filterPriority?.addEventListener('change', applyFiltersAndDisplay);
-    searchTermInput?.addEventListener('input', applyFiltersAndDisplay); // Real-time search
-    clearFiltersBtn?.addEventListener('click', () => {
-        if(filterStatus) filterStatus.value = 'all';
-        if(filterPriority) filterPriority.value = 'all';
-        if(searchTermInput) searchTermInput.value = '';
-        applyFiltersAndDisplay();
+    // Sidebar navigation link (status filter) listener
+    sidebarNav?.addEventListener('click', (event) => {
+        if (event.target.classList.contains('status-filter')) {
+            event.preventDefault(); // Prevent default link behavior
+            const status = event.target.dataset.status;
+
+            // Update active state visually
+            sidebarNav.querySelectorAll('.status-filter').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update global filter state and re-apply filters
+            currentStatusFilter = status;
+            applyFiltersAndDisplay();
+        }
     });
+
+    // Search input listener
+    searchTermInput?.addEventListener('input', applyFiltersAndDisplay);
 
     // Edit form submission listener
     const editTaskForm = document.getElementById('edit-task-form');
     editTaskForm?.addEventListener('submit', handleEditTaskSubmit);
 
-    // Listener for closing the modal (can also use onclick in HTML)
+    // Modal close listeners
     const closeModalButton = document.querySelector('#edit-task-modal .close-modal-btn');
     closeModalButton?.addEventListener('click', closeEditModal);
-
-    // Optional: Close modal if clicking outside the content
     const modal = document.getElementById('edit-task-modal');
     modal?.addEventListener('click', (event) => {
-        if (event.target === modal) { // Check if click is on the backdrop
-            closeEditModal();
-        }
+        if (event.target === modal) closeEditModal();
     });
 }
 
 // --- Filtering Logic ---
 
 /**
- * Applies current filters to the tasks and re-displays them.
+ * Applies current filters (status from active link, search term) and re-displays tasks.
  */
 function applyFiltersAndDisplay() {
-    const statusFilter = document.getElementById('filter-status')?.value || 'all';
-    const priorityFilter = document.getElementById('filter-priority')?.value || 'all';
+    // Status filter is now read from the global variable 'currentStatusFilter'
     const searchTerm = document.getElementById('search-term')?.value.toLowerCase().trim() || '';
-    const clearFiltersBtn = document.getElementById('clear-filters-btn');
-
-    const filtersActive = statusFilter !== 'all' || priorityFilter !== 'all' || searchTerm !== '';
-    if (clearFiltersBtn) {
-        clearFiltersBtn.style.display = filtersActive ? 'inline-block' : 'none';
-    }
 
     let filteredTasks = currentTasks;
 
-    if (statusFilter !== 'all') {
-        filteredTasks = filteredTasks.filter(task => task.status === statusFilter);
+    // Apply status filter
+    if (currentStatusFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => task.status === currentStatusFilter);
     }
-    if (priorityFilter !== 'all') {
-        filteredTasks = filteredTasks.filter(task => task.priority === priorityFilter);
-    }
+
+    // Apply search term filter
     if (searchTerm) {
         filteredTasks = filteredTasks.filter(task =>
             task.title.toLowerCase().includes(searchTerm) ||
@@ -265,13 +267,12 @@ async function handleAddTask(event) {
     const form = event.target;
     const titleInput = form.querySelector('#new-task-title');
     const descriptionInput = form.querySelector('#new-task-description');
-    const messageElementId = 'add-task-message'; // Assuming an element for messages
+    const messageElementId = 'add-task-message';
     const submitButton = form.querySelector('button[type="submit"]');
 
     const taskData = {
         title: titleInput.value.trim(),
         description: descriptionInput.value.trim(),
-        // Add priority/due_date if form fields exist
     };
 
     if (!taskData.title) {
@@ -280,7 +281,6 @@ async function handleAddTask(event) {
         return;
     }
 
-    console.log("Adding task:", taskData);
     if(submitButton) {
         submitButton.disabled = true;
         submitButton.classList.add('loading');
@@ -295,24 +295,20 @@ async function handleAddTask(event) {
         const result = await response.json();
 
         if (result.success) {
-            console.log("Task added successfully:", result);
             form.reset();
             if (typeof showMessage === 'function') {
                 const msgElement = document.getElementById(messageElementId);
-                if(msgElement) msgElement.style.display = 'none'; // Hide message area
+                if(msgElement) msgElement.style.display = 'none';
             }
-            await loadTasks(); // Fetch all tasks again and apply filters
+            await loadTasks(); // Reload and apply filters
         } else {
-            console.error("API error adding task:", result.message);
             if (typeof showMessage === 'function') showMessage(messageElementId, `Failed to add task: ${result.message}`, 'error');
             else alert(`Failed to add task: ${result.message}`);
         }
     } catch (error) {
-        console.error("Could not add task:", error);
         if (typeof showMessage === 'function') showMessage(messageElementId, `Error adding task: ${error.message}.`, 'error');
         else alert(`Error adding task: ${error.message}.`);
     } finally {
-        // Ensure button is re-enabled and loading class removed
         if(submitButton) {
             submitButton.disabled = false;
             submitButton.classList.remove('loading');
@@ -322,12 +318,10 @@ async function handleAddTask(event) {
 
 /**
  * Handles deleting a task with animation.
- * @param {string} taskId The ID of the task to delete.
  */
 async function handleDeleteTask(taskId) {
     if (!confirm('Are you sure you want to delete this task?')) return;
 
-    console.log("Deleting task:", taskId);
     const taskElement = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
 
     try {
@@ -339,39 +333,29 @@ async function handleDeleteTask(taskId) {
         const result = await response.json();
 
         if (result.success) {
-            console.log("Task deleted successfully");
             if (taskElement) {
-                taskElement.classList.add('task-delete-fade-out'); // Add animation class
-                // Remove after animation
+                taskElement.classList.add('task-delete-fade-out');
                 taskElement.addEventListener('animationend', () => {
                     taskElement.remove();
-                    // Update global task list and re-apply filters/display
                     currentTasks = currentTasks.filter(task => task.id != taskId);
-                    applyFiltersAndDisplay(); // Re-render the list which handles empty messages
-                }, { once: true }); // Ensure listener runs only once
+                    applyFiltersAndDisplay(); // Re-render
+                }, { once: true });
             } else {
-                 // If element somehow not found, just reload
-                 await loadTasks();
+                 await loadTasks(); // Fallback reload
             }
         } else {
-            console.error("API error deleting task:", result.message);
             alert(`Failed to delete task: ${result.message}`);
         }
     } catch (error) {
-        console.error("Could not delete task:", error);
         alert(`Error deleting task: ${error.message}.`);
     }
 }
 
 /**
  * Handles toggling the completion status of a task.
- * @param {string} taskId The ID of the task to update.
- * @param {boolean} isComplete The new completion status (true if checked).
  */
 async function handleToggleComplete(taskId, isComplete) {
     const newStatus = isComplete ? 'completed' : 'pending';
-    console.log(`Toggling task ${taskId} to ${newStatus}`);
-
     const updateData = { task_id: taskId, status: newStatus };
 
     try {
@@ -383,25 +367,20 @@ async function handleToggleComplete(taskId, isComplete) {
         const result = await response.json();
 
         if (result.success) {
-            console.log("Task status updated successfully");
-            // Update local data and re-render is faster than full reload
             const taskIndex = currentTasks.findIndex(t => t.id == taskId);
             if (taskIndex > -1) {
                 currentTasks[taskIndex].status = newStatus;
             }
-            applyFiltersAndDisplay(); // Re-render with updated status
+            applyFiltersAndDisplay(); // Re-render
         } else {
-            console.error("API error updating task status:", result.message);
             alert(`Failed to update task status: ${result.message}`);
-            // Revert checkbox state visually on failure
             const checkbox = document.querySelector(`.task-card[data-task-id="${taskId}"] .complete-task-chk`);
-            if (checkbox) checkbox.checked = !isComplete;
+            if (checkbox) checkbox.checked = !isComplete; // Revert UI
         }
     } catch (error) {
-        console.error("Could not update task status:", error);
         alert(`Error updating task status: ${error.message}.`);
         const checkbox = document.querySelector(`.task-card[data-task-id="${taskId}"] .complete-task-chk`);
-        if (checkbox) checkbox.checked = !isComplete;
+        if (checkbox) checkbox.checked = !isComplete; // Revert UI
     }
 }
 
@@ -464,7 +443,6 @@ async function handleEditTaskSubmit(event) {
         return;
     }
 
-    console.log("Submitting updated task data:", updatedData);
     if (typeof showMessage === 'function') showMessage(messageElementId, 'Saving changes...', 'info');
     if(submitButton) {
         submitButton.disabled = true;
@@ -480,20 +458,16 @@ async function handleEditTaskSubmit(event) {
         const result = await response.json();
 
         if (result.success) {
-            console.log("Task updated successfully:", result);
             closeEditModal();
             await loadTasks(); // Reload tasks to reflect changes
         } else {
-            console.error("API error updating task:", result.message);
             if (typeof showMessage === 'function') showMessage(messageElementId, `Failed to update task: ${result.message}`, 'error');
             else alert(`Failed to update task: ${result.message}`);
         }
     } catch (error) {
-        console.error("Could not update task:", error);
         if (typeof showMessage === 'function') showMessage(messageElementId, `Error updating task: ${error.message}.`, 'error');
         else alert(`Error updating task: ${error.message}.`);
     } finally {
-         // Ensure button is re-enabled and loading class removed
          if(submitButton) {
              submitButton.disabled = false;
              submitButton.classList.remove('loading');

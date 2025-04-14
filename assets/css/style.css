@@ -65,42 +65,84 @@ body {
     border-radius: var(--border-radius-medium);
     height: fit-content; /* Adjust height based on content */
     position: sticky; /* Make sidebar sticky */
-    top: 20px; /* Adjust top position as needed */
+    top: 85px; /* Adjust top position considering the sticky header height + margin */
 }
+/* Styling for ALL h3 elements within the sidebar */
 .dashboard-sidebar h3 {
     margin-top: 0;
-    font-size: 16px;
+    font-size: 13px; /* Smaller heading */
     color: var(--color-text-secondary);
+    font-weight: 600;
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
-.dashboard-sidebar ul {
+/* Specific styling for the navigation list */
+.sidebar-nav {
     list-style: none;
     padding: 0;
-    margin: 0 0 15px 0;
+    margin: 0 0 20px 0; /* Space below nav */
 }
-.dashboard-sidebar li a {
+.sidebar-nav li a { /* Target only links within the nav list */
     display: block;
-    padding: 8px 0;
+    padding: 8px 10px;
     color: var(--color-text-primary);
     font-size: 14px;
     border-radius: var(--border-radius-small);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, font-weight 0.2s ease; /* Added font-weight */
+    margin-bottom: 2px;
+    font-weight: 500; /* Default weight */
 }
-.dashboard-sidebar li a:hover {
-    background-color: #e0e0e0;
-    opacity: 1.0; /* Override default link hover */
+.sidebar-nav li a:hover {
+    background-color: rgba(0, 113, 227, 0.05); /* Lighter background on hover only */
+    color: var(--color-accent);
+    opacity: 1.0;
 }
-.dashboard-sidebar p {
-    font-size: 14px;
+.sidebar-nav li a.active { /* Style for the active link */
+    background-color: rgba(0, 113, 227, 0.1); /* Slightly darker background for active */
+    color: var(--color-accent);
+    font-weight: 600; /* Bolder when active */
+    position: relative; /* Needed for pseudo-element */
+}
+/* Add a visual indicator for the active link */
+.sidebar-nav li a.active::before {
+    content: '';
+    position: absolute;
+    left: -20px; /* Position relative to the padding of .dashboard-sidebar */
+    top: 0;
+    bottom: 0;
+    width: 3px; /* Width of the indicator */
+    background-color: var(--color-accent);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+/* Style for the stats section */
+.sidebar-stats p {
+    font-size: 13px;
     color: var(--color-text-secondary);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align count vertically */
 }
+.sidebar-stats span { /* Style the count number */
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background-color: rgba(0,0,0,0.05); /* Subtle background for count */
+    padding: 2px 7px; /* Adjusted padding */
+    border-radius: 7px; /* More rounded */
+    min-width: 24px; /* Ensure some width */
+    text-align: center;
+    font-size: 12px; /* Slightly smaller count */
+}
+
 .dashboard-sidebar hr {
     border: none;
     border-top: 1px solid var(--color-border);
-    margin: 15px 0;
+    margin: 20px 0; /* Consistent margin for separators */
 }
 
 
@@ -114,10 +156,11 @@ h1, h2, h3, h4 {
     color: var(--color-text-primary);
     margin-bottom: 0.8em;
 }
+/* General h1, h2 etc. styles remain */
 h1 { font-size: 28px; font-weight: 700; }
-h2 { font-size: 22px; font-weight: 600; } /* Adjusted from prompt for better hierarchy */
-h3 { font-size: 18px; font-weight: 600; } /* Adjusted */
-h4 { font-size: 16px; font-weight: 600; } /* For card titles */
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 18px; font-weight: 600; }
+h4 { font-size: 16px; font-weight: 600; }
 
 a {
     color: var(--color-accent);
@@ -147,14 +190,14 @@ input[type="email"],
 input[type="password"],
 textarea {
     width: 100%;
-    padding: 10px 0; /* Padding top/bottom, no horizontal padding */
+    padding: 10px 0;
     font-size: 16px;
     color: var(--color-text-primary);
     background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--color-border);
-    outline: none; /* Remove default focus outline */
-    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Add box-shadow transition */
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 textarea {
     min-height: 80px;
@@ -166,15 +209,13 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
      border-bottom-color: var(--color-accent);
-     /* Add a subtle glow effect like Apple's focus rings */
      box-shadow: 0 1px 0 0 var(--color-accent);
 }
 
 /* --- Task Grid Layout --- */
 .task-grid {
     display: grid;
-    gap: 20px; /* Space between cards */
-    /* Default: 3 columns for desktop */
+    gap: 20px;
     grid-template-columns: repeat(3, 1fr);
 }
 
@@ -184,43 +225,22 @@ textarea:focus {
 /* Tablet (e.g., iPads) */
 @media (max-width: 992px) {
     .dashboard-layout {
-        flex-direction: column; /* Stack layout */
-        max-width: 90%; /* Use container width */
-        padding: 0; /* Remove layout padding */
+        flex-direction: column;
+        max-width: 90%;
+        padding: 0;
         margin: 20px auto;
     }
     .dashboard-sidebar {
-        display: none; /* Hide sidebar on tablet and mobile */
-        /* Alternatively, could implement a toggle button */
+        display: none;
     }
     .dashboard-main {
-        width: 100%; /* Main content takes full width */
+        width: 100%;
     }
-
     .task-grid {
-        /* 2 columns for tablet */
         grid-template-columns: repeat(2, 1fr);
     }
-
-    /* .container adjustments already handled */
-
-    /* Filter layout adjustments */
-    .filters {
-        gap: 15px;
-    }
-    .filters .filter-group {
-        flex-basis: calc(50% - 10px); /* Roughly 2 per row */
-    }
-     .filters input[type="text"] {
-         min-width: 100%; /* Full width search on smaller screens */
-         flex-basis: 100%;
-    }
-     .filters .button-secondary {
-         margin-top: 10px; /* Add space if it wraps */
-     }
-
-     .modal-content {
-         margin: 15% auto; /* Adjust vertical margin */
+    .modal-content {
+         margin: 15% auto;
          max-width: 80%;
      }
 }
@@ -228,128 +248,82 @@ textarea:focus {
 /* Mobile (e.g., smartphones) */
 @media (max-width: 576px) {
      .dashboard-layout {
-         max-width: 100%; /* Full width */
+         max-width: 100%;
          margin: 15px auto;
      }
-     /* Sidebar remains hidden */
-
     .task-grid {
-        /* 1 column for mobile */
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
      h1 { font-size: 24px; }
      h2 { font-size: 20px; }
 
-    /* .container adjustments already handled */
-
     .dashboard-header .container {
-        flex-direction: column; /* Stack header items */
+        flex-direction: column;
         gap: 10px;
         text-align: center;
     }
      .dashboard-header .user-menu {
          width: 100%;
          display: flex;
-         justify-content: space-between; /* Space out welcome and logout */
+         justify-content: space-between;
      }
      .dashboard-header .user-menu a { margin-left: 0; }
-
-
-    .filters {
-        flex-direction: column; /* Stack filters vertically */
-        align-items: stretch; /* Make items full width */
-        gap: 15px;
-    }
-     .filters .filter-group {
-         flex-basis: auto; /* Reset basis */
-     }
-     .filters select, .filters input[type="text"] {
-         min-width: auto; /* Reset min-width */
-     }
-     .filters .button-secondary {
-         width: 100%; /* Full width clear button */
-         text-align: center;
-     }
 
      .add-task-section {
          padding: 15px;
      }
      .add-task-section button[type="submit"] {
-         width: 100%; /* Full width add button */
+         width: 100%;
      }
 
      .task-card {
-         padding: 12px; /* Reduce padding */
-         flex-direction: column; /* Stack content and actions */
+         padding: 12px;
+         flex-direction: column;
          align-items: stretch;
      }
      .task-card-content { margin-right: 0; margin-bottom: 10px; }
-     .task-card-actions { justify-content: flex-end; } /* Align actions to the right */
+     .task-card-actions { justify-content: flex-end; }
 
      .modal-content {
-         margin: 20% auto; /* Adjust vertical margin */
+         margin: 20% auto;
          max-width: 95%;
          padding: 20px;
      }
      .modal h2 { font-size: 20px; }
 }
 
-/* --- Filter/Search Controls --- */
-.filters {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 20px; /* Space between filter groups */
-    padding: 15px;
-    background-color: var(--color-secondary-bg);
-    border-radius: var(--border-radius-medium);
-    margin-bottom: 30px;
-    align-items: flex-end; /* Align items to the bottom */
+/* --- Sidebar Search Styling --- */
+.sidebar-search {
+    margin-top: 15px;
 }
-
-.filter-group {
-    display: flex;
-    flex-direction: column; /* Stack label and input/select */
-    gap: 5px;
+.sidebar-search h3 {
+     margin-top: 0;
+     font-size: 13px; /* Consistent with other sidebar headings */
+     color: var(--color-text-secondary);
+     font-weight: 600;
+     border-bottom: 1px solid var(--color-border);
+     padding-bottom: 8px;
+     margin-bottom: 12px;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
 }
-
-.filter-group label {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    margin-bottom: 0; /* Remove default margin */
+.sidebar-search .filter-group {
+    margin-bottom: 0;
 }
-
-.filters select,
-.filters input[type="text"] {
-    padding: 8px 5px; /* Adjust padding */
+.sidebar-search input[type="text"] {
+    width: 100%;
+    padding: 8px 10px; /* Add horizontal padding */
     border-radius: var(--border-radius-small);
     border: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border); /* Keep consistent look */
-    min-width: 150px; /* Give selects some width */
+    font-size: 14px;
+    background-color: var(--color-primary-bg); /* White background for search */
 }
-.filters input[type="text"] {
-     min-width: 200px; /* More width for search */
-}
-
-.filters select:focus,
-.filters input[type="text"]:focus {
+.sidebar-search input[type="text"]:focus {
      border-color: var(--color-accent);
-     box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2); /* Subtle focus ring */
+     box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
 }
 
-/* Secondary button style for Clear Filters */
-.button-secondary {
-    background-color: var(--color-secondary-bg);
-    color: var(--color-accent);
-    border: 1px solid var(--color-accent);
-    padding: 7px 15px; /* Slightly smaller padding */
-}
-.button-secondary:hover {
-    background-color: #e0e0e0; /* Slightly darker gray */
-    border-color: #005bb5;
-    color: #005bb5;
-}
 
 /* Basic Button Style */
 button[type="submit"], .button {
@@ -383,25 +357,25 @@ button[type="submit"]:disabled {
 
 /* Button Loading State */
 .button.loading, button[type="submit"].loading {
-    position: relative; /* Needed for absolute positioning of spinner */
-    color: transparent !important; /* Hide original text */
-    pointer-events: none; /* Prevent clicks while loading */
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
     cursor: wait;
 }
 
 .button.loading::after, button[type="submit"].loading::after {
     content: '';
     position: absolute;
-    width: 16px; /* Spinner size */
+    width: 16px;
     height: 16px;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: auto;
-    border: 3px solid rgba(255, 255, 255, 0.3); /* Spinner track */
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: #fff; /* Spinner active color */
+    border-top-color: #fff;
     animation: button-spinner 0.6s linear infinite;
 }
 
@@ -418,7 +392,7 @@ button[type="submit"]:disabled {
     margin-top: 15px;
     border-radius: var(--border-radius-small);
     font-size: 14px;
-    display: none; /* Hidden by default */
+    display: none;
 }
 .message.info { background-color: #e0f0ff; color: #004085; border: 1px solid #b8daff; }
 .message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
@@ -427,23 +401,22 @@ button[type="submit"]:disabled {
 
 /* --- Dashboard Specific --- */
 .dashboard-header {
-    position: sticky; /* Make header sticky */
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 900; /* Below modal */
-    padding: 15px 0;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-    border-bottom: 1px solid transparent; /* Start transparent */
+    z-index: 900;
+    padding: 5px 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid transparent;
     margin-bottom: 30px;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
-/* Scrolled state for header */
 .dashboard-header.scrolled {
-    background-color: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
+    background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-bottom-color: var(--color-border); /* Show border on scroll */
+    border-bottom-color: var(--color-border);
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -451,10 +424,13 @@ button[type="submit"]:disabled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0; /* Override default container margin */
+    margin-top: 0;
     margin-bottom: 0;
 }
-.dashboard-header h1 { margin-bottom: 0; }
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
 .dashboard-header .user-menu { font-size: 14px; color: var(--color-text-secondary); }
 .dashboard-header .user-menu a { margin-left: 15px; font-weight: 500; }
 
@@ -489,18 +465,17 @@ button[type="submit"]:disabled {
     box-shadow: var(--shadow-card);
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Align items to the top */
+    align-items: flex-start;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
-    position: relative; /* For potential absolute elements later */
+    position: relative;
 }
 .task-card:hover {
     box-shadow: var(--shadow-card-hover);
-    /* transform: scale(1.02); /* Hover effect from prompt - can enable if desired */
 }
 
 .task-card-content {
     flex-grow: 1;
-    margin-right: 15px; /* Space between content and actions */
+    margin-right: 15px;
 }
 
 .task-card .task-title {
@@ -522,13 +497,13 @@ button[type="submit"]:disabled {
     font-size: 12px;
     color: var(--color-text-secondary);
     display: flex;
-    gap: 15px; /* Space between meta items */
+    justify-content: space-between; /* Push items apart */
+    /* gap: 15px; /* Remove gap, space-between handles it */ */
 }
 .task-card .task-meta .priority-label {
     text-transform: capitalize;
     font-weight: 500;
 }
-/* Priority colors */
 .task-card.priority-low .priority-label { color: var(--color-text-secondary); }
 .task-card.priority-medium .priority-label { color: var(--color-warning); }
 .task-card.priority-high .priority-label { color: var(--color-danger); }
@@ -536,8 +511,8 @@ button[type="submit"]:disabled {
 .task-card-actions {
     display: flex;
     align-items: center;
-    gap: 8px; /* Space between action buttons/checkbox */
-    flex-shrink: 0; /* Prevent actions from shrinking */
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .task-card-actions .icon-btn {
@@ -546,7 +521,7 @@ button[type="submit"]:disabled {
     color: var(--color-text-secondary);
     cursor: pointer;
     padding: 5px;
-    font-size: 14px; /* Adjust icon size */
+    font-size: 14px;
     transition: color 0.2s ease;
 }
 .task-card-actions .icon-btn:hover {
@@ -558,9 +533,9 @@ button[type="submit"]:disabled {
 
 .task-card-actions .complete-task-chk {
     cursor: pointer;
-    width: 18px; /* Adjust size */
+    width: 18px;
     height: 18px;
-    accent-color: var(--color-accent); /* Style checkbox color */
+    accent-color: var(--color-accent);
 }
 
 /* Completed Task Styling */
@@ -583,34 +558,31 @@ button[type="submit"]:disabled {
 
 /* --- Modal Styling --- */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.5); /* Black w/ opacity - backdrop */
-    /* For background blur effect (might need JS fallback or prefixing) */
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    /* Animation */
     animation: fadeInAnimation 0.3s ease forwards;
 }
 
 .modal-content {
     background-color: var(--color-primary-bg);
-    margin: 10% auto; /* Centered vertically (approx) and horizontally */
+    margin: 10% auto;
     padding: 30px;
-    border-radius: var(--border-radius-large); /* 16px */
-    max-width: 500px; /* Adjust width as needed */
+    border-radius: var(--border-radius-large);
+    max-width: 500px;
     width: 90%;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     position: relative;
-    /* Animation */
     animation: slideUpAnimation 0.4s ease forwards;
-    opacity: 0; /* Start hidden for animation */
+    opacity: 0;
 }
 
 .close-modal-btn {
@@ -639,7 +611,7 @@ button[type="submit"]:disabled {
 /* Style select dropdowns similarly to inputs */
 select {
     width: 100%;
-    padding: 10px 5px; /* Adjust padding */
+    padding: 10px 5px;
     font-size: 16px;
     color: var(--color-text-primary);
     background-color: transparent;
@@ -647,10 +619,10 @@ select {
     border-bottom: 1px solid var(--color-border);
     outline: none;
     transition: border-color 0.2s ease;
-    appearance: none; /* Remove default arrow */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2386868B' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); /* Custom arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2386868B' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 5px center;
     background-size: 16px 16px;
@@ -660,7 +632,7 @@ select:focus {
 }
 
 /* --- Custom Checkbox --- */
-.visually-hidden { /* Class to hide the actual checkbox input */
+.visually-hidden {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -669,13 +641,13 @@ select:focus {
 }
 
 .custom-checkbox-label {
-  display: inline-flex; /* Align span correctly */
+  display: inline-flex;
   align-items: center;
   cursor: pointer;
-  position: relative; /* Needed for positioning the visual part */
-  user-select: none; /* Prevent text selection */
-  padding-left: 28px; /* Space for the custom checkbox */
-  min-height: 20px; /* Ensure label height accommodates checkbox */
+  position: relative;
+  user-select: none;
+  padding-left: 28px;
+  min-height: 20px;
 }
 
 .custom-checkbox-visual {
@@ -686,22 +658,20 @@ select:focus {
   width: 18px;
   height: 18px;
   border: 1.5px solid var(--color-border);
-  border-radius: 4px; /* Slightly rounded corners */
+  border-radius: 4px;
   background-color: var(--color-primary-bg);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-/* Style when checkbox is checked */
 .complete-task-chk:checked + .custom-checkbox-visual {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
 }
 
-/* Checkmark using ::after pseudo-element */
 .custom-checkbox-visual::after {
   content: '';
   position: absolute;
-  display: none; /* Hidden by default */
+  display: none;
   left: 5px;
   top: 2px;
   width: 5px;
@@ -709,18 +679,15 @@ select:focus {
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  /* Animation properties */
   opacity: 0;
-  transition: opacity 0.1s ease-in-out 0.1s; /* Fade in slightly delayed */
+  transition: opacity 0.1s ease-in-out 0.1s;
 }
 
-/* Show checkmark when checked */
 .complete-task-chk:checked + .custom-checkbox-visual::after {
   display: block;
   opacity: 1;
 }
 
-/* Focus style for accessibility */
 .complete-task-chk:focus + .custom-checkbox-visual {
   box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.3);
 }

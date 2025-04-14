@@ -1,16 +1,19 @@
 # Active Context: To-Do List Web Application (Initialization)
 
 ## 1. Current Focus
+- Improving sidebar UI/UX.
 - Final testing and addressing any remaining refinements or bugs.
 
 ## 2. Recent Changes
-- Added Desktop Sidebar HTML structure (`dashboard.php`) and CSS (`style.css`).
-- Implemented Header Blur effect via CSS and JS scroll listener (`style.css`, `main.js`).
+- Integrated status filtering into sidebar navigation links (`dashboard.php`, `tasks.js`).
+- Removed status/priority dropdowns from sidebar (`dashboard.php`, `tasks.js`).
+- Updated sidebar CSS (`style.css`).
 
 ## 3. Next Steps (Immediate Plan)
-1.  **User Testing**: User to test the current functionality, including sidebar (desktop) and header blur effect.
-2.  **Security Hardening (Optional)**: Implement CSRF protection.
-3.  **Final Debugging**.
+1.  **Refine Sidebar UI**: Improve visual distinction and interaction based on user feedback.
+2.  **User Testing**: Test integrated sidebar filters, search, and stats.
+3.  **Security Hardening (Optional)**: Implement CSRF protection.
+4.  **Final Debugging**.
 
 ## 4. Active Decisions & Considerations
 - **Database Naming**: Confirmed as `todo_app_db`.
