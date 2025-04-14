@@ -11,8 +11,8 @@ if (isLoggedIn()) {
 // If not logged in, display the landing page content below
 $pageTitle = "ToDo App - Organize Your Life"; // Updated Title
 
-// Include the public header 
-include 'includes/header_public.php'; 
+// Include the unified header
+require_once 'includes/header.php';
 ?>
 
     <!-- Hero section -->
@@ -84,6 +84,6 @@ include 'includes/header_public.php';
     </section>
 
 <?php
-// Include the public footer 
-include 'includes/footer_public.php'; 
+// Include the unified footer
+require_once 'includes/footer.php';
 ?>

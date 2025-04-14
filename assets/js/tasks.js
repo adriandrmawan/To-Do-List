@@ -64,61 +64,39 @@ async function loadTasks() {
 }
 
 /**
- * Displays tasks grouped by status in the UI and updates sidebar stats.
- * @param {Array} tasks Array of task objects to display (potentially filtered).
+ * Displays tasks in either list or grid view
  */
 function displayTasks(tasks) {
     const container = document.getElementById('task-list-container');
     if (!container) return;
 
-    container.innerHTML = ''; // Clear
-
-    const pendingTasks = tasks.filter(task => task.status === 'pending');
-    const completedTasks = tasks.filter(task => task.status === 'completed');
-
-    const pendingSection = document.createElement('div');
-    pendingSection.id = 'pending-tasks';
-    pendingSection.innerHTML = '<h3>Pending</h3>';
-    const pendingGrid = document.createElement('div');
-    pendingGrid.className = 'task-grid';
-    if (pendingTasks.length === 0 && currentStatusFilter !== 'completed') { // Show message only if not specifically filtering completed
-        pendingSection.innerHTML += '<p class="no-tasks-message">No pending tasks.</p>';
-    } else {
-        pendingTasks.forEach(task => pendingGrid.appendChild(createTaskElement(task)));
-        pendingSection.appendChild(pendingGrid);
-    }
-
-    const completedSection = document.createElement('div');
-    completedSection.id = 'completed-tasks';
-    completedSection.innerHTML = '<h3>Completed</h3>';
-    const completedGrid = document.createElement('div');
-    completedGrid.className = 'task-grid';
-     if (completedTasks.length === 0 && currentStatusFilter !== 'pending') { // Show message only if not specifically filtering pending
-        completedSection.innerHTML += '<p class="no-tasks-message">No completed tasks.</p>';
-    } else {
-        completedTasks.forEach(task => completedGrid.appendChild(createTaskElement(task)));
-        completedSection.appendChild(completedGrid);
-    }
+    const view = container.classList.contains('grid-view') ? 'grid' : 'list';
+    container.innerHTML = '';
 
     if (tasks.length === 0) {
-         container.innerHTML = '<p class="no-tasks-message">No tasks match the current filters.</p>';
-    } else {
-        // Only append sections if they are relevant to the current filter or 'all'
-        if (currentStatusFilter === 'all' || currentStatusFilter === 'pending') {
-             if (pendingTasks.length > 0 || currentStatusFilter === 'pending') container.appendChild(pendingSection);
-        }
-         if (currentStatusFilter === 'all' || currentStatusFilter === 'completed') {
-             if (completedTasks.length > 0 || currentStatusFilter === 'completed') container.appendChild(completedSection);
-         }
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <h3>No tasks yet</h3>
+                <p>Click "New Task" or press "/" to create your first task</p>
+            </div>
+        `;
+        return;
     }
 
-    updateSidebarStats(); // Update stats based on ALL tasks
+    const taskList = document.createElement('div');
+    taskList.className = view === 'grid' ? 'task-grid' : 'task-list';
 
+    tasks.forEach(task => {
+        taskList.appendChild(createTaskElement(task, view));
+    });
+
+    container.appendChild(taskList);
+    updateSidebarStats();
+
+    // Apply animations
     if (typeof applyStaggeredAnimation === 'function') {
-        applyStaggeredAnimation('#pending-tasks .task-grid .task-card', 'task-card-load-animation', 0.05);
-        applyStaggeredAnimation('#completed-tasks .task-grid .task-card', 'task-card-load-animation', 0.05);
-    } else {
-        console.warn('applyStaggeredAnimation function not found.');
+        applyStaggeredAnimation('.task-card', 'task-card-load-animation', 0.05);
     }
 }
 
@@ -140,9 +118,9 @@ function updateSidebarStats() {
 }
 
 /**
- * Creates the HTML element for a single task.
+ * Creates a task card element in either list or grid view
  */
-function createTaskElement(task) {
+function createTaskElement(task, view = 'list') {
     const taskElement = document.createElement('div');
     taskElement.className = `task-card priority-${task.priority} status-${task.status}`;
     taskElement.dataset.taskId = task.id;
@@ -151,32 +129,54 @@ function createTaskElement(task) {
     const description = (typeof escapeHTML === 'function' ? escapeHTML(task.description || '') : (task.description || ''));
     const titleClass = task.status === 'completed' ? 'task-title task-complete-animation' : 'task-title';
 
-    taskElement.innerHTML = `
-        <div class="task-card-content">
-            <h4 class="${titleClass}">${title}</h4>
-            ${description ? `<p class="task-description">${description}</p>` : ''}
-            <div class="task-meta">
-                <span>Priority: <span class="priority-label">${task.priority}</span></span>
-                ${task.due_date ? `<span class="task-due-date">Due: ${task.due_date}</span>` : ''}
+    if (view === 'grid') {
+        taskElement.innerHTML = `
+            <div class="task-card-header">
+                <div class="task-status">
+                    <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                        <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
+                        <span class="custom-checkbox-visual"></span>
+                    </label>
+                </div>
+                <div class="task-meta">
+                    <span class="priority-label">${task.priority}</span>
+                    ${task.due_date ? `<span class="due-date"><i class="fas fa-calendar"></i> ${task.due_date}</span>` : ''}
+                </div>
             </div>
-        </div>
-        <div class="task-card-actions">
-            <div class="action-buttons">
-                <button class="edit-task-btn icon-btn" title="Edit Task" data-id="${task.id}"><i class="fas fa-pencil-alt"></i></button>
-                <button class="delete-task-btn icon-btn" title="Delete Task" data-id="${task.id}"><i class="fas fa-trash-alt"></i></button>
+            <div class="task-content">
+                <h4 class="${titleClass}">${title}</h4>
+                ${description ? `<p class="task-description">${description}</p>` : ''}
             </div>
-            <div class="action-checkbox">
-                <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
-                    <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
-                    <span class="custom-checkbox-visual"></span>
-                </label>
+            <div class="task-actions">
+                <button class="edit-task-btn icon-btn" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-task-btn icon-btn" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
             </div>
-            
-        </div>
-    `;
+        `;
+    } else {
+        taskElement.innerHTML = `
+            <div class="task-card-content">
+                <div class="task-header">
+                    <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                        <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
+                        <span class="custom-checkbox-visual"></span>
+                    </label>
+                    <h4 class="${titleClass}">${title}</h4>
+                </div>
+                ${description ? `<p class="task-description">${description}</p>` : ''}
+                <div class="task-meta">
+                    <span class="priority-label">${task.priority}</span>
+                    ${task.due_date ? `<span class="due-date"><i class="fas fa-calendar"></i> ${task.due_date}</span>` : ''}
+                </div>
+            </div>
+            <div class="task-actions">
+                <button class="edit-task-btn icon-btn" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-task-btn icon-btn" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `;
+    }
+
     return taskElement;
 }
-
 
 /**
  * Sets up event listeners for task interactions.
@@ -240,17 +240,13 @@ function setupEventListeners(taskContainer, addTaskForm, sidebarNav, searchTermI
  * Applies current filters (status from active link, search term) and re-displays tasks.
  */
 function applyFiltersAndDisplay() {
-    // Status filter is now read from the global variable 'currentStatusFilter'
     const searchTerm = document.getElementById('search-term')?.value.toLowerCase().trim() || '';
-
     let filteredTasks = currentTasks;
 
-    // Apply status filter
     if (currentStatusFilter !== 'all') {
         filteredTasks = filteredTasks.filter(task => task.status === currentStatusFilter);
     }
 
-    // Apply search term filter
     if (searchTerm) {
         filteredTasks = filteredTasks.filter(task =>
             task.title.toLowerCase().includes(searchTerm) ||
@@ -258,9 +254,22 @@ function applyFiltersAndDisplay() {
         );
     }
 
-    displayTasks(filteredTasks); // Re-display using the filtered list
+    displayTasks(filteredTasks);
 }
 
+// Add event listener for view switching
+document.addEventListener('DOMContentLoaded', () => {
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const container = document.getElementById('task-list-container');
+            if (container) {
+                container.className = 'tasks-container ' + btn.dataset.view + '-view';
+                applyFiltersAndDisplay(); // Redisplay tasks in new view
+            }
+        });
+    });
+});
 
 // --- CRUD Handlers ---
 

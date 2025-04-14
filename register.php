@@ -8,7 +8,7 @@ if (isLoggedIn()) {
 
 // Include header
 $pageTitle = "Sign Up - ToDo App"; // Optional: Set a specific page title
-require_once 'includes/header_public.php'; // Use public header
+require_once 'includes/header.php'; // Use unified header
 ?>
 
 <div class="auth-container"> <!-- Wrapper for centering -->
@@ -44,5 +44,5 @@ require_once 'includes/header_public.php'; // Use public header
 
 <?php
 // Include footer
-require_once 'includes/footer_public.php'; // Use public footer
+require_once 'includes/footer.php'; // Use unified footer
 ?>

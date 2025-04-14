@@ -1,35 +1,60 @@
 /* Animations Stylesheet for To-Do List App */
 
-/* Page Transitions */
-.fade-in {
-    animation: fadeInAnimation ease 0.5s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-}
-
+/* Animation keyframes */
 @keyframes fadeInAnimation {
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
 
-.slide-up {
-    animation: slideUpAnimation ease 0.5s;
-    animation-iteration-count: 1;
-    animation-fill-mode: forwards;
-    position: relative; /* Needed for transform */
-    opacity: 0; /* Start hidden */
+@keyframes slideUpAnimation {
+    0% { 
+        opacity: 0; 
+        transform: translateY(20px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
 }
 
-@keyframes slideUpAnimation {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+@keyframes strikeThrough {
+    0% {
+        width: 0;
+        left: 0;
+    }
+    100% {
+        width: 100%;
+        left: 0;
+    }
+}
+
+@keyframes fadeOutAnimation {
+    0% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    100% { 
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* Page Transitions */
+.fade-in {
+    animation: fadeInAnimation 0.5s ease forwards;
+}
+
+.slide-up {
+    animation: slideUpAnimation 0.5s ease forwards;
+    position: relative;
+    opacity: 0;
 }
 
 /* Task Card Animations */
 .task-card-load-animation {
-    /* Example: Combine fade-in and slide-up */
-    animation: fadeInAnimation ease 0.4s forwards, slideUpAnimation ease 0.4s forwards;
-    opacity: 0; /* Start hidden */
+    animation: fadeInAnimation 0.4s ease forwards,
+               slideUpAnimation 0.4s ease forwards;
+    opacity: 0;
 }
 
 /* Staggered animation for lists will likely be handled by JS */
@@ -42,41 +67,32 @@
 
 /* Task Interaction Animations */
 .task-complete-animation {
-    /* Example: line-through animation */
-    /* This might be applied to the task title */
     position: relative;
-    text-decoration: none; /* Remove default */
 }
+
 .task-complete-animation::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 0;
     width: 0;
-    height: 1px;
-    background-color: var(--color-text-secondary, #86868B);
+    height: 2px;
+    background-color: var(--color-text-secondary);
     animation: strikeThrough 0.3s ease-out forwards;
-}
-@keyframes strikeThrough {
-    from { width: 0; }
-    to { width: 100%; }
 }
 
 .task-delete-fade-out {
-    animation: fadeOutAnimation ease 0.3s forwards;
-}
-@keyframes fadeOutAnimation {
-    from { opacity: 1; transform: scale(1); }
-    to { opacity: 0; transform: scale(0.95); }
+    animation: fadeOutAnimation 0.3s ease-out forwards;
 }
 
-/* Form Animations */
+/* Form Input Error Animation */
 .form-input-error-shake {
     animation: shakeAnimation 0.4s cubic-bezier(.36,.07,.19,.97) both;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
     perspective: 1000px;
 }
+
 @keyframes shakeAnimation {
   10%, 90% { transform: translate3d(-1px, 0, 0); }
   20%, 80% { transform: translate3d(2px, 0, 0); }

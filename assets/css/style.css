@@ -505,20 +505,14 @@ button[type="submit"]:disabled {
     font-size: 12px;
     color: var(--color-text-secondary);
     display: flex;
-    width: 100%; /* Keep width 100% */
+    width: 100%;
     align-items: center;
-    justify-content: space-between; /* Push items apart */
-    gap: 10px; /* Keep gap for spacing if items are close */
-    margin-top: 8px; /* Slightly increase margin */
+    gap: 10px;
+    margin-top: 5px; /* Add small margin above meta */
 }
 /* Target the first span (Priority) */
 .task-card .task-meta > span:first-child {
-    flex-shrink: 0; /* Prevent priority from shrinking */
-}
-/* Style the due date span now inside meta */
-.task-card .task-meta .task-due-date {
-    white-space: nowrap; /* Prevent date text wrapping */
-    flex-shrink: 0; /* Prevent date from shrinking */
+    flex-shrink: 0;
 }
 .task-card .task-meta .priority-label {
     text-transform: capitalize;
@@ -540,6 +534,20 @@ button[type="submit"]:disabled {
     /* margin-top: 10px; /* Remove top margin, handled by date wrapper */ */
 }
 
+/* Style the wrapper for the due date */
+.task-card-actions .action-due-date {
+    width: 100%; /* Make it take full width to force wrapping */
+    text-align: right; /* Align date text to the right */
+    margin-top: 20px; /* Adjusted margin */
+    padding-bottom: 0; /* Remove bottom padding */
+}
+
+/* Apply original meta font style to the date in its new location */
+.task-card-actions .task-due-date {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    white-space: nowrap; /* Prevent date text wrapping */
+}
 
 /* Ensure button/checkbox wrappers align nicely */
 .task-card-actions .action-buttons,
@@ -724,9 +732,12 @@ button[type="submit"]:disabled {
 }
 .public-nav-links .button-small { /* Adjust button size for header */
     padding: 6px 16px;
-    font-size: 14px;
 }
 
+/* Ensure all Sign Up buttons have white text */
+.button.button-primary.button-small {
+    color: #FFFFFF;
+}
 
 .landing-page {
     /* Specific styles if needed for the overall main container */
@@ -1017,4 +1028,82 @@ select:focus {
 
 .complete-task-chk:focus + .custom-checkbox-visual {
   box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.3);
+}
+
+/* Standardize header and footer styles */
+header {
+    width: 100%;
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 20px 0; /* Consistent padding */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+footer {
+    width: 100%;
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 20px 0; /* Consistent padding */
+    text-align: center;
+    position: relative;
+    bottom: 0;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.dashboard-header {
+    font-size: 24px; /* Match size with other headers */
+    font-weight: bold;
+    text-align: center;
+}
+
+.dashboard-footer {
+    font-size: 14px; /* Match size with other footers */
+    color: #6c757d; /* Muted text color */
+}
+
+/* Public Header and Dashboard Header shared styles */
+.public-header, .dashboard-header {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    padding: 10px 0;
+}
+
+/* Logo styling for both headers */
+.logo {
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: -0.5px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+/* Header right section styling */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.header-right .nav-link,
+.header-right .logout-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.header-right .nav-link:hover,
+.header-right .logout-link:hover {
+    color: var(--color-accent);
+}
+
+.welcome-text {
+    color: var(--color-text-secondary);
 }

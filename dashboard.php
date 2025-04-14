@@ -12,18 +12,6 @@ require_once 'includes/header.php';
 $username = isset($_SESSION['username']) ? escape($_SESSION['username']) : 'User';
 
 ?>
-
-<!-- Header specific to dashboard (Example) -->
-<header class="dashboard-header">
-    <div class="container">
-        <h1>My To-Do List</h1>
-        <div class="user-menu">
-            Welcome, <?php echo $username; ?>!
-            <a href="api/auth/logout.php">Logout</a>
-        </div>
-    </div>
-</header>
-
 <div class="dashboard-layout"> <!-- New wrapper for sidebar + main -->
 
     <aside class="dashboard-sidebar">
