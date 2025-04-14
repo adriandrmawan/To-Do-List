@@ -57,8 +57,7 @@ async function handleLogin(event) {
         });
 
         // Clear message area before processing response
-        showMessage(messageElementId, '', 'info'); // Clear previous message
-        messageElement.style.display = 'none'; // Hide element
+        // showMessage(messageElementId, '', 'info'); // Clearing is handled by the next showMessage call
 
         if (!response.ok) {
              // Try to get error message from response body if possible
@@ -119,8 +118,7 @@ async function handleRegister(event) {
         });
 
         // Clear message area before processing response
-        showMessage(messageElementId, '', 'info');
-        messageElement.style.display = 'none';
+        // showMessage(messageElementId, '', 'info'); // Clearing is handled by the next showMessage call
 
         if (!response.ok) {
             let errorMsg = `HTTP error! status: ${response.status}`;
