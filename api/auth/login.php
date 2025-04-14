@@ -29,13 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // --- Find User in Database ---
         try {
-            // Prepare SQL to find user by username OR email
-            $sql = "SELECT id, username, password FROM users WHERE username = :identifier OR email = :identifier LIMIT 1";
+            // --- SIMPLIFIED QUERY FOR DEBUGGING ---
+            // Prepare SQL using only username for now
+            $sql = "SELECT id, username, password FROM users WHERE username = ? LIMIT 1";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':identifier', $username_or_email, PDO::PARAM_STR);
-            $stmt->execute();
+
+            // Execute by passing an indexed array with the value for the placeholder
+            $params = [$username_or_email];
+            $stmt->execute($params);
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // If user not found by username, we could try searching by email separately later as a workaround
+            // if (!$user) { ... try email query ... }
 
             if ($user) {
                 // --- Verify Password ---
@@ -52,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['username'] = $user['username'];
                     // Store other relevant info if needed, but avoid storing sensitive data
 
-                    // Optional: Redirect URL after login (can be sent back to JS)
-                    // $response['redirect'] = 'dashboard.php';
-
                 } else {
                     // Invalid password
                     $response['message'] = 'Invalid username/email or password.';
@@ -68,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['message'] = 'Database error during login.';
             // Log the detailed error message internally
             error_log("PDOException in login.php: " . $e->getMessage());
+            // Add the specific SQL error code to the response for debugging
+            $response['sql_error_code'] = $e->getCode();
         } catch (Exception $e) {
              $response['message'] = 'An unexpected error occurred during login.';
              error_log("Exception in login.php: " . $e->getMessage());
