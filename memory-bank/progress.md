@@ -16,7 +16,7 @@
     - Header Blur Effect on Scroll
     - Sidebar Integration (Stats, Status Filters, Search)
 - **Features Remaining/Refinements**:
-    - Verify Task Card Meta Layout (Priority/Due Date alignment) - CSS appears correct, needs visual check.
+    - Verify Task Card Layout (Priority/Due Date on same line, left/right aligned) - Reverted structure, applied final CSS, needs visual check.
     - Advanced Animations (Optional: Button ripple, more complex transitions)
     - Advanced UI (Optional: Mobile touch gestures)
     - Security Hardening (Optional: CSRF Protection)
@@ -45,7 +45,7 @@
     - Advanced animations/UI (touch gestures, etc.).
     - Update README.md documentation.
 ## 4. Known Issues / Blockers
-- **Task Card Layout (Verification Needed)**: CSS rules (`display: flex; justify-content: space-between;`) are in place for `.task-meta`, but visual confirmation is required to ensure Priority (left) and Due Date (right) are aligned as expected.
+- **Task Card Layout (Verification Needed)**: Reverted HTML structure (via JS) to place priority/date inside `.task-meta`. Applied final CSS (`display: flex`, `justify-content: space-between`, `flex-shrink: 0` on children, `white-space: nowrap` on date). Visual confirmation required.
 - **Login PDO Issue (Resolved)**: Encountered and fixed `SQLSTATE[HY093]: Invalid parameter number` error by using a two-step query.
 
 ## 5. Evolution of Project Decisions

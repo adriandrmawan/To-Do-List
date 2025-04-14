@@ -476,6 +476,7 @@ button[type="submit"]:disabled {
 .task-card-content {
     flex-grow: 1;
     margin-right: 15px;
+    min-width: 0; /* Prevent content from overflowing when flex container shrinks */
 }
 
 .task-card .task-title {
@@ -498,25 +499,63 @@ button[type="submit"]:disabled {
     color: var(--color-text-secondary);
     display: flex;
     width: 100%; /* Ensure it takes full width */
-    justify-content: space-between; /* Push items apart */
+    /* justify-content: space-between; /* Push items apart */
+    align-items: center; /* Vertically align items in case they wrap or have different heights */
+    gap: 10px; /* Add some gap between flex items */
+    /* justify-content: space-between; /* Only one item now */ */
 }
-.task-card .task-meta .task-due-date {
-    /* margin-left: auto; /* No longer needed with space-between */ */
+/* Target the first span (Priority) */
+.task-card .task-meta > span:first-child {
+    flex-shrink: 0; /* Prevent priority from shrinking */
 }
+/* Remove styles for date inside meta */
+/* .task-card .task-meta .task-due-date { ... } */
 .task-card .task-meta .priority-label {
     text-transform: capitalize;
     font-weight: 500;
 }
+
+/* Remove styles for the non-existent wrapper */
+/* .task-card-content .task-due-date-wrapper { ... } */
+/* .task-card-content .task-due-date { ... } */
+
+/* Priority label colors */
 .task-card.priority-low .priority-label { color: var(--color-text-secondary); }
 .task-card.priority-medium .priority-label { color: var(--color-warning); }
 .task-card.priority-high .priority-label { color: var(--color-danger); }
 
 .task-card-actions {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: center; /* Align items vertically in the main row */
+    flex-wrap: wrap; /* Allow items to wrap */
+    justify-content: flex-end; /* Push items to the right */
+    gap: 8px; /* Gap between buttons/checkbox */
     flex-shrink: 0;
+    margin-top: 10px; /* Add some space above the actions area */
 }
+
+/* Style the wrapper for the due date */
+.task-card-actions .action-due-date {
+    width: 100%; /* Make it take full width to force wrapping */
+    text-align: right; /* Align date text to the right */
+    margin-top: 25px; /* Further increased margin to push it down more */
+    padding-bottom: 2px; /* Add slight padding if needed */
+}
+
+/* Apply original meta font style to the date in its new location */
+.task-card-actions .task-due-date {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    white-space: nowrap; /* Prevent date text wrapping */
+}
+
+/* Ensure button/checkbox wrappers align nicely */
+.task-card-actions .action-buttons,
+.task-card-actions .action-checkbox {
+    display: flex;
+    align-items: center;
+}
+
 
 .task-card-actions .icon-btn {
     background: none;

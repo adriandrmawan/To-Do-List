@@ -157,16 +157,21 @@ function createTaskElement(task) {
             ${description ? `<p class="task-description">${description}</p>` : ''}
             <div class="task-meta">
                 <span>Priority: <span class="priority-label">${task.priority}</span></span>
-                ${task.due_date ? `<span class="task-due-date">Due: ${task.due_date}</span>` : ''}
+                
             </div>
         </div>
         <div class="task-card-actions">
-            <button class="edit-task-btn icon-btn" title="Edit Task" data-id="${task.id}"><i class="fas fa-pencil-alt"></i></button>
-            <button class="delete-task-btn icon-btn" title="Delete Task" data-id="${task.id}"><i class="fas fa-trash-alt"></i></button>
-            <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
-                <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
-                <span class="custom-checkbox-visual"></span>
-            </label>
+            <div class="action-buttons"> 
+                <button class="edit-task-btn icon-btn" title="Edit Task" data-id="${task.id}"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-task-btn icon-btn" title="Delete Task" data-id="${task.id}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <div class="action-checkbox"> 
+                <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                    <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
+                    <span class="custom-checkbox-visual"></span>
+                </label>
+            </div>
+            ${task.due_date ? `<div class="action-due-date"><span class="task-due-date">Due: ${task.due_date}</span></div>` : ''} 
         </div>
     `;
     return taskElement;
