@@ -27,10 +27,9 @@ session_destroy();
 // 4. Redirect to the login page
 // Determine the correct relative path from api/auth/ to login.php
 // Since logout.php is in api/auth/, we need to go up two levels to reach the root where login.php is.
-// However, the redirect function in functions.php likely assumes paths relative to the root.
-// Let's use an absolute path relative to the domain root or adjust the redirect function if needed.
-// Assuming login.php is at the root level relative to includes/.
-redirect('../login.php'); // Go up one level from 'api/' to the root
+// However, the redirect function in functions.php simply uses the provided URL.
+// We need a path relative to the web root to ensure it goes to the correct index.php.
+redirect('/to-do/index.php'); // Path relative to web root (localhost)
 
 exit; // Ensure no further code execution
 ?>

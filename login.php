@@ -7,33 +7,34 @@ if (isLoggedIn()) {
 }
 
 // Include header
-$pageTitle = "Login"; // Optional: Set a specific page title
-require_once 'includes/header.php';
+$pageTitle = "Sign In - ToDo App"; // Optional: Set a specific page title
+require_once 'includes/header_public.php'; // Use public header
 ?>
 
-<div class="container"> <!-- Example container -->
-    <h1>Login</h1>
+<div class="auth-container"> <!-- Wrapper for centering -->
+    <div class="auth-card"> <!-- Card styling -->
+        <h1>Sign In</h1>
 
-    <!-- Login Form (to be implemented) -->
-    <form id="login-form" action="api/auth/login.php" method="POST">
-        <div class="form-group">
-            <label for="username">Username or Email:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <!-- Add CSRF token field later -->
-        <button type="submit">Login</button>
-        <div id="login-message"></div> <!-- For displaying errors/success -->
-    </form>
+        <div id="login-message" class="message" style="display: none;"></div> <!-- Message area inside card -->
 
-    <p>Don't have an account? <a href="register.php">Register here</a>.</p>
+        <form id="login-form" class="auth-form" action="api/auth/login.php" method="POST">
+            <div class="form-group">
+                <label for="username">Username or Email</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <!-- Add CSRF token field later -->
+            <button type="submit" class="button button-primary button-full-width">Sign In</button>
+        </form>
 
-</div> <!-- /container -->
+        <p class="auth-switch-link">Don't have an account? <a href="register.php">Sign Up</a>.</p>
+    </div>
+</div> <!-- /auth-container -->
 
 <?php
 // Include footer
-require_once 'includes/footer.php';
+require_once 'includes/footer_public.php'; // Use public footer
 ?>

@@ -73,11 +73,14 @@ async function handleLogin(event) {
         }
 
         const result = await response.json();
+        console.log('Login API response received:', result); // Log the response
 
         if (result.success) {
+            console.log('Login successful, preparing redirect...'); // Log before timeout
             showMessage(messageElementId, result.message, 'success');
             // Redirect to dashboard after a short delay
             setTimeout(() => {
+                 console.log('Executing redirect to dashboard.php'); // Log inside timeout
                  window.location.href = 'dashboard.php'; // Or use result.redirect if provided
             }, 1000); // 1 second delay
         } else {

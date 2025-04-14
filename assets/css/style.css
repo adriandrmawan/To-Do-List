@@ -459,18 +459,23 @@ button[type="submit"]:disabled {
 /* --- Task Card Styling --- */
 .task-card {
     background-color: var(--color-primary-bg);
-    border-radius: var(--border-radius-medium);
-    padding: 16px;
-    margin-bottom: 15px;
-    box-shadow: var(--shadow-card);
+    border-radius: 18px; /* Match example */
+    padding: 18px 22px; /* Match example */
+    margin-bottom: 10px; /* Reduce margin slightly */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Match example */
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    align-items: flex-start; /* Align items to the top */
+    transition: background-color 0.2s; /* Match example hover */
     position: relative;
+    border-bottom: 1px solid #f2f2f2; /* Match example */
+}
+.task-card:last-child {
+    border-bottom: none; /* Match example */
 }
 .task-card:hover {
-    box-shadow: var(--shadow-card-hover);
+    background-color: #f9f9f9; /* Match example */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Keep shadow consistent */
 }
 
 .task-card-content {
@@ -481,43 +486,44 @@ button[type="submit"]:disabled {
 
 .task-card .task-title {
     margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-weight: 600;
+    margin-bottom: 5px; /* Reduce margin */
+    font-size: 17px; /* Match example */
+    font-weight: 500; /* Adjust weight */
     color: var(--color-text-primary);
+    transition: opacity 0.2s; /* Match example */
 }
 
 .task-card .task-description {
     font-size: 14px;
     color: var(--color-text-secondary);
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Adjust margin */
     line-height: 1.4;
+    transition: opacity 0.2s; /* Match example */
 }
 
 .task-card .task-meta {
     font-size: 12px;
     color: var(--color-text-secondary);
     display: flex;
-    width: 100%; /* Ensure it takes full width */
-    /* justify-content: space-between; /* Push items apart */
-    align-items: center; /* Vertically align items in case they wrap or have different heights */
-    gap: 10px; /* Add some gap between flex items */
-    /* justify-content: space-between; /* Only one item now */ */
+    width: 100%; /* Keep width 100% */
+    align-items: center;
+    justify-content: space-between; /* Push items apart */
+    gap: 10px; /* Keep gap for spacing if items are close */
+    margin-top: 8px; /* Slightly increase margin */
 }
 /* Target the first span (Priority) */
 .task-card .task-meta > span:first-child {
     flex-shrink: 0; /* Prevent priority from shrinking */
 }
-/* Remove styles for date inside meta */
-/* .task-card .task-meta .task-due-date { ... } */
+/* Style the due date span now inside meta */
+.task-card .task-meta .task-due-date {
+    white-space: nowrap; /* Prevent date text wrapping */
+    flex-shrink: 0; /* Prevent date from shrinking */
+}
 .task-card .task-meta .priority-label {
     text-transform: capitalize;
-    font-weight: 500;
+    font-weight: 600; /* Make priority label bolder */
 }
-
-/* Remove styles for the non-existent wrapper */
-/* .task-card-content .task-due-date-wrapper { ... } */
-/* .task-card-content .task-due-date { ... } */
 
 /* Priority label colors */
 .task-card.priority-low .priority-label { color: var(--color-text-secondary); }
@@ -526,28 +532,14 @@ button[type="submit"]:disabled {
 
 .task-card-actions {
     display: flex;
-    align-items: center; /* Align items vertically in the main row */
+    align-items: center; /* Align items vertically */
     flex-wrap: wrap; /* Allow items to wrap */
     justify-content: flex-end; /* Push items to the right */
-    gap: 8px; /* Gap between buttons/checkbox */
+    gap: 12px; /* Match example */
     flex-shrink: 0;
-    margin-top: 10px; /* Add some space above the actions area */
+    /* margin-top: 10px; /* Remove top margin, handled by date wrapper */ */
 }
 
-/* Style the wrapper for the due date */
-.task-card-actions .action-due-date {
-    width: 100%; /* Make it take full width to force wrapping */
-    text-align: right; /* Align date text to the right */
-    margin-top: 25px; /* Further increased margin to push it down more */
-    padding-bottom: 2px; /* Add slight padding if needed */
-}
-
-/* Apply original meta font style to the date in its new location */
-.task-card-actions .task-due-date {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    white-space: nowrap; /* Prevent date text wrapping */
-}
 
 /* Ensure button/checkbox wrappers align nicely */
 .task-card-actions .action-buttons,
@@ -562,31 +554,55 @@ button[type="submit"]:disabled {
     border: none;
     color: var(--color-text-secondary);
     cursor: pointer;
-    padding: 5px;
-    font-size: 14px;
-    transition: color 0.2s ease;
+    padding: 0; /* Remove padding */
+    font-size: 14px; /* Keep font size for potential fallback */
+    transition: background-color 0.2s; /* Match example */
+    width: 32px; /* Match example */
+    height: 32px; /* Match example */
+    border-radius: 50%; /* Match example */
+    display: flex; /* Center icon */
+    align-items: center; /* Center icon */
+    justify-content: center; /* Center icon */
+}
+.task-card-actions .icon-btn i { /* Style icon inside */
+    font-size: 16px; /* Adjust icon size */
 }
 .task-card-actions .icon-btn:hover {
-    color: var(--color-accent);
+    background-color: #f2f2f2; /* Match example */
+    color: var(--color-accent); /* Keep accent color on hover */
 }
 .task-card-actions .delete-task-btn:hover {
-    color: var(--color-danger);
+    color: var(--color-danger); /* Keep danger color on hover */
+    background-color: #f2f2f2;
 }
 
-.task-card-actions .complete-task-chk {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-    accent-color: var(--color-accent);
+/* Adjust checkbox position slightly if needed */
+.task-card-actions .action-checkbox {
+    /* margin-left: auto; /* Push checkbox to the right if needed */ */
 }
+.task-card-actions .custom-checkbox-label {
+    padding-left: 0; /* Remove padding if using only visual */
+    min-height: 32px; /* Match button height */
+    display: flex;
+    align-items: center;
+}
+.task-card-actions .custom-checkbox-visual {
+    position: static; /* Reset position */
+    transform: none; /* Reset transform */
+    /* Adjust visual style if needed */
+}
+
 
 /* Completed Task Styling */
-.task-card.status-completed {
-    opacity: 0.7;
-}
-.task-card.status-completed .task-title {
+.task-card.status-completed .task-title,
+.task-card.status-completed .task-description,
+.task-card.status-completed .task-meta {
     text-decoration: line-through;
     color: var(--color-text-secondary);
+    opacity: 0.7; /* Match example */
+}
+.task-card.status-completed .priority-label {
+    color: var(--color-text-secondary) !important; /* Override priority color */
 }
 
 /* No Tasks Message */
@@ -595,6 +611,275 @@ button[type="submit"]:disabled {
     text-align: center;
     padding: 20px;
     font-style: italic;
+}
+
+
+/* --- Auth Page Styles (Login/Register) --- */
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px - 71px); /* Adjust based on header/footer height */
+    padding: 40px 20px;
+}
+
+.auth-card {
+    background-color: var(--color-primary-bg);
+    padding: 40px;
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-card);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.auth-card h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.auth-card .message {
+    text-align: left; /* Align message text left */
+    margin-bottom: 20px; /* Space below message */
+    margin-top: 0; /* Remove default top margin */
+}
+
+.auth-form .form-group {
+    text-align: left; /* Align labels left */
+    margin-bottom: 25px; /* Increase spacing */
+}
+
+.auth-form label {
+    font-weight: 600; /* Bolder labels */
+    font-size: 13px;
+    color: var(--color-text-primary);
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"] {
+    padding: 12px 0; /* Increase padding */
+    font-size: 17px; /* Slightly larger font */
+}
+
+.button.button-full-width {
+    width: 100%;
+    padding: 12px 20px; /* Adjust padding */
+    font-size: 17px;
+    margin-top: 10px; /* Space above button */
+}
+
+.auth-switch-link {
+    margin-top: 30px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+.auth-switch-link a {
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+
+/* --- Landing Page Styles --- */
+
+/* Public Header */
+.public-header {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    padding: 10px 0; /* Adjusted padding */
+}
+.public-header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.public-header .logo {
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: -0.5px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+.public-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.public-nav-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.public-nav-links a:hover {
+    color: var(--color-accent);
+    opacity: 1.0; /* Override general link hover opacity */
+}
+.public-nav-links .button-small { /* Adjust button size for header */
+    padding: 6px 16px;
+    font-size: 14px;
+}
+
+
+.landing-page {
+    /* Specific styles if needed for the overall main container */
+}
+
+.hero-section {
+    text-align: center;
+    padding: 120px 20px 60px 20px; /* Generous padding */
+    background: linear-gradient(180deg, #ffffff 0%, var(--apple-gray) 100%); /* Gradient from example */
+}
+
+.hero-section h1 {
+    font-size: 56px; /* Large, impactful headline from example */
+    letter-spacing: -1px; /* From example */
+    margin-bottom: 8px; /* From example */
+    background: linear-gradient(90deg, #1d1d1f 60%, #6e6e73); /* Gradient text from example */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* Standard property */
+    line-height: 1.1; /* Adjust line height */
+}
+
+.hero-section .subtitle { /* Renamed p to subtitle for clarity */
+    font-size: 28px; /* From example */
+    color: var(--apple-text-secondary);
+    font-weight: 400; /* From example */
+    max-width: 680px; /* From example */
+    margin: 0 auto 30px auto; /* Center paragraph */
+    line-height: 1.4; /* Adjust line height */
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+}
+
+/* Style primary/secondary buttons if needed, or use existing .button */
+.cta-button { /* Specific style for landing page buttons if needed */
+    padding: 12px 30px;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 30px; /* Rounded like example */
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, transform 0.1s ease;
+}
+.cta-button.button-primary {
+    background-color: var(--color-accent);
+    color: white;
+}
+.cta-button.button-primary:hover {
+     background-color: #0077ED; /* Slightly darker blue */
+}
+.cta-button.button-primary:active {
+     transform: scale(0.98);
+}
+/* Add styles for secondary button if used */
+/* .cta-button.button-secondary { ... } */
+
+
+/* Main container for landing page content below hero */
+.landing-container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+
+/* Features Section Styling (Adapted from example) */
+.features {
+    padding: 80px 0;
+    background-color: white; /* White background from example */
+    text-align: center;
+}
+.features h2 {
+    font-size: 48px; /* From example */
+    font-weight: 600;
+    margin-bottom: 50px; /* From example */
+    letter-spacing: -0.5px; /* From example */
+    text-align: center;
+}
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* From example */
+    gap: 40px; /* From example */
+    max-width: 980px; /* From example */
+    margin: 0 auto;
+    padding: 0 22px; /* From example */
+}
+.feature { /* Renamed from feature-item */
+    text-align: center;
+    /* Removed background/shadow for cleaner look like example */
+}
+.feature-icon { /* Style for SVG icons */
+    margin-bottom: 18px;
+    color: var(--color-accent);
+    display: inline-block;
+}
+.feature-icon svg { /* Ensure SVG scales */
+    width: 48px;
+    height: 48px;
+}
+.feature h3 {
+    font-size: 24px; /* From example */
+    font-weight: 600;
+    margin-bottom: 12px; /* From example */
+}
+.feature p {
+    color: var(--apple-text-secondary); /* Use secondary text color */
+    font-size: 17px; /* From example */
+    line-height: 1.5; /* From example */
+}
+
+/* CTA Section Styling (Adapted from example) */
+.cta {
+    background: linear-gradient(180deg, white 0%, var(--apple-gray) 100%); /* From example */
+    padding: 100px 0; /* From example */
+    text-align: center;
+}
+.cta h2 {
+    font-size: 48px; /* From example */
+    font-weight: 600;
+    margin-bottom: 20px; /* From example */
+    letter-spacing: -0.5px; /* From example */
+}
+.cta p {
+    font-size: 21px; /* From example */
+    color: var(--apple-text-secondary);
+    margin-bottom: 30px; /* From example */
+    max-width: 580px; /* From example */
+    margin-left: auto;
+    margin-right: auto;
+}
+/* .cta-button styles already defined above */
+
+
+/* Public Footer Styling */
+.public-footer {
+    background-color: var(--apple-gray); /* Match example */
+    padding: 30px 0;
+    color: var(--apple-text-secondary);
+    font-size: 12px;
+    text-align: center;
+}
+.public-footer .container {
+    max-width: 980px; /* Wider container for footer */
+    padding: 0 22px;
+}
+.public-footer .divider {
+    height: 1px;
+    background-color: var(--color-border); /* Use theme border color */
+    margin: 10px auto 20px auto; /* Adjusted margin */
+    max-width: 980px;
 }
 
 
