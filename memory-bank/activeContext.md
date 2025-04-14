@@ -1,17 +1,16 @@
 # Active Context: To-Do List Web Application (Initialization)
 
 ## 1. Current Focus
-- Final testing and addressing any remaining high-priority refinements or bugs.
+- Final testing and addressing any remaining refinements or bugs.
 
 ## 2. Recent Changes
-- Implemented custom checkbox styling and animation (`style.css`, `tasks.js`).
-- Implemented button loading state (spinner) animation (`style.css`, `main.js`, `tasks.js`).
+- Added Desktop Sidebar HTML structure (`dashboard.php`) and CSS (`style.css`).
+- Implemented Header Blur effect via CSS and JS scroll listener (`style.css`, `main.js`).
 
 ## 3. Next Steps (Immediate Plan)
-1.  **User Testing**: User to test the current functionality, including the new animations (custom checkbox, button loading).
-2.  **Implement Advanced UI (Optional)**: Add desktop sidebar, header blur effect.
-3.  **Security Hardening (Optional)**: Implement CSRF protection.
-4.  **Final Debugging**.
+1.  **User Testing**: User to test the current functionality, including sidebar (desktop) and header blur effect.
+2.  **Security Hardening (Optional)**: Implement CSRF protection.
+3.  **Final Debugging**.
 
 ## 4. Active Decisions & Considerations
 - **Database Naming**: Confirmed as `todo_app_db`.

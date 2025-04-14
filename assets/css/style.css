@@ -43,10 +43,72 @@ body {
 
 /* General Layout */
 .container {
-    max-width: 1100px; /* Adjust as needed */
-    margin: 20px auto; /* Add some margin */
+    max-width: 1100px; /* Adjust as needed for main content area */
+    margin: 0 auto; /* Centered */
+    padding: 0 20px; /* Padding inside container */
+}
+
+/* Dashboard Layout with Sidebar (Desktop First) */
+.dashboard-layout {
+    display: flex;
+    gap: 30px; /* Space between sidebar and main content */
+    max-width: 1300px; /* Wider max-width for layout including sidebar */
+    margin: 30px auto; /* Top/bottom margin */
     padding: 0 20px;
 }
+
+.dashboard-sidebar {
+    width: 240px; /* Fixed sidebar width */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    background-color: var(--color-secondary-bg);
+    padding: 20px;
+    border-radius: var(--border-radius-medium);
+    height: fit-content; /* Adjust height based on content */
+    position: sticky; /* Make sidebar sticky */
+    top: 20px; /* Adjust top position as needed */
+}
+.dashboard-sidebar h3 {
+    margin-top: 0;
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.dashboard-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+}
+.dashboard-sidebar li a {
+    display: block;
+    padding: 8px 0;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    border-radius: var(--border-radius-small);
+    transition: background-color 0.2s ease;
+}
+.dashboard-sidebar li a:hover {
+    background-color: #e0e0e0;
+    opacity: 1.0; /* Override default link hover */
+}
+.dashboard-sidebar p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 5px;
+}
+.dashboard-sidebar hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 15px 0;
+}
+
+
+.dashboard-main {
+    flex-grow: 1; /* Allow main content to take remaining space */
+    min-width: 0; /* Prevent content overflow issues */
+}
+
 
 h1, h2, h3, h4 {
     color: var(--color-text-primary);
@@ -121,16 +183,28 @@ textarea:focus {
 
 /* Tablet (e.g., iPads) */
 @media (max-width: 992px) {
+    .dashboard-layout {
+        flex-direction: column; /* Stack layout */
+        max-width: 90%; /* Use container width */
+        padding: 0; /* Remove layout padding */
+        margin: 20px auto;
+    }
+    .dashboard-sidebar {
+        display: none; /* Hide sidebar on tablet and mobile */
+        /* Alternatively, could implement a toggle button */
+    }
+    .dashboard-main {
+        width: 100%; /* Main content takes full width */
+    }
+
     .task-grid {
         /* 2 columns for tablet */
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .container {
-        max-width: 90%; /* Allow more width */
-    }
+    /* .container adjustments already handled */
 
-    /* Adjust filter layout if needed */
+    /* Filter layout adjustments */
     .filters {
         gap: 15px;
     }
@@ -153,6 +227,12 @@ textarea:focus {
 
 /* Mobile (e.g., smartphones) */
 @media (max-width: 576px) {
+     .dashboard-layout {
+         max-width: 100%; /* Full width */
+         margin: 15px auto;
+     }
+     /* Sidebar remains hidden */
+
     .task-grid {
         /* 1 column for mobile */
         grid-template-columns: 1fr;
@@ -162,12 +242,7 @@ textarea:focus {
      h1 { font-size: 24px; }
      h2 { font-size: 20px; }
 
-    .container {
-        max-width: 100%;
-        padding: 0 15px; /* Reduce padding */
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
+    /* .container adjustments already handled */
 
     .dashboard-header .container {
         flex-direction: column; /* Stack header items */
@@ -352,10 +427,26 @@ button[type="submit"]:disabled {
 
 /* --- Dashboard Specific --- */
 .dashboard-header {
+    position: sticky; /* Make header sticky */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 900; /* Below modal */
     padding: 15px 0;
-    border-bottom: 1px solid var(--color-border);
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    border-bottom: 1px solid transparent; /* Start transparent */
     margin-bottom: 30px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
+/* Scrolled state for header */
+.dashboard-header.scrolled {
+    background-color: rgba(255, 255, 255, 0.85); /* Slightly less transparent */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom-color: var(--color-border); /* Show border on scroll */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
 .dashboard-header .container {
     display: flex;
     justify-content: space-between;

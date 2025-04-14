@@ -24,10 +24,28 @@ $username = isset($_SESSION['username']) ? escape($_SESSION['username']) : 'User
     </div>
 </header>
 
-<main class="dashboard-main">
-    <div class="container">
+<div class="dashboard-layout"> <!-- New wrapper for sidebar + main -->
 
-        <!-- Add Task Section (Example - could be a button opening a modal) -->
+    <aside class="dashboard-sidebar">
+        <h3>Navigation / Stats</h3>
+        <!-- Sidebar content goes here -->
+        <p>(Sidebar content placeholder)</p>
+        <ul>
+            <li><a href="#">All Tasks</a></li>
+            <li><a href="#">Pending</a></li>
+            <li><a href="#">Completed</a></li>
+        </ul>
+        <hr>
+        <p>Stats:</p>
+        <p>Total: <span id="stats-total">0</span></p>
+        <p>Pending: <span id="stats-pending">0</span></p>
+        <p>Completed: <span id="stats-completed">0</span></p>
+    </aside>
+
+    <main class="dashboard-main">
+        <!-- Removed the outer .container div, will apply to sections if needed -->
+
+        <!-- Add Task Section -->
         <section class="add-task-section">
             <h2>Add New Task</h2>
             <!-- Add Task Form (to be implemented, possibly in a modal) -->
@@ -115,8 +133,9 @@ $username = isset($_SESSION['username']) ? escape($_SESSION['username']) : 'User
         </div>
         <!-- End Edit Task Modal -->
 
-    </div> <!-- /container -->
-</main>
+    </main>
+
+</div> <!-- /dashboard-layout -->
 
 <?php
 // Include footer

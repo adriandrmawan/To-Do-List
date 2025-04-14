@@ -3,8 +3,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Main JS Loaded');
-    // Initialize any global components or event listeners here
     initializeAuthForms();
+    initializeHeaderScrollEffect(); // Initialize header effect
 });
 
 // Example helper function (can be expanded)
@@ -99,6 +99,22 @@ async function handleLogin(event) {
              submitButton.classList.remove('loading');
          }
     }
+}
+
+// --- Header Scroll Effect ---
+
+function initializeHeaderScrollEffect() {
+    const header = document.querySelector('.dashboard-header');
+    if (!header) return; // Only run if header exists
+
+    window.addEventListener('scroll', () => {
+        // Add 'scrolled' class if page is scrolled down, remove if at top
+        if (window.scrollY > 10) { // Add class after scrolling down a bit (e.g., 10px)
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    }, { passive: true }); // Use passive listener for better scroll performance
 }
 
 async function handleRegister(event) {
