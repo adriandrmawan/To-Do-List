@@ -11,12 +11,16 @@ let currentTasks = [];
 document.addEventListener('DOMContentLoaded', () => {
     // Only run task-specific code if we are on the dashboard
     const taskListContainer = document.getElementById('task-list-container');
-    const addTaskForm = document.getElementById('add-task-form'); // Get form reference
+    const addTaskForm = document.getElementById('add-task-form');
+    const filterStatus = document.getElementById('filter-status');
+    const filterPriority = document.getElementById('filter-priority');
+    const searchTermInput = document.getElementById('search-term');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
 
     if (taskListContainer) {
         console.log('Tasks JS Loaded');
-        loadTasks(); // Initial load
-        setupEventListeners(taskListContainer, addTaskForm); // Setup listeners
+        loadTasks(); // Initial load (fetches all tasks into currentTasks)
+        setupEventListeners(taskListContainer, addTaskForm, filterStatus, filterPriority, searchTermInput, clearFiltersBtn); // Pass filter elements
     } else {
         console.log('Task list container not found, Tasks JS not fully initialized.');
     }
@@ -143,9 +147,13 @@ function createTaskElement(task) {
 /**
  * Sets up event listeners for task interactions.
  * @param {HTMLElement} taskContainer The container holding the tasks.
- * @param {HTMLFormElement} addTaskForm The form for adding new tasks.
+ * @param {HTMLFormElement | null} addTaskForm The form for adding new tasks.
+ * @param {HTMLSelectElement | null} filterStatus Status filter dropdown.
+ * @param {HTMLSelectElement | null} filterPriority Priority filter dropdown.
+ * @param {HTMLInputElement | null} searchTermInput Search input field.
+ * @param {HTMLButtonElement | null} clearFiltersBtn Clear filters button.
  */
-function setupEventListeners(taskContainer, addTaskForm) {
+function setupEventListeners(taskContainer, addTaskForm, filterStatus, filterPriority, searchTermInput, clearFiltersBtn) {
     // Add Task Form Submission
     addTaskForm?.addEventListener('submit', handleAddTask);
 
@@ -164,7 +172,70 @@ function setupEventListeners(taskContainer, addTaskForm) {
              handleToggleComplete(taskId, target.checked);
         }
     });
+
+    // Add listeners for filter controls
+    filterStatus?.addEventListener('change', applyFiltersAndDisplay);
+    filterPriority?.addEventListener('change', applyFiltersAndDisplay);
+    // Use 'input' event for real-time search filtering
+    searchTermInput?.addEventListener('input', applyFiltersAndDisplay);
+    clearFiltersBtn?.addEventListener('click', () => {
+        // Reset filter controls to default values
+        if(filterStatus) filterStatus.value = 'all';
+        if(filterPriority) filterPriority.value = 'all';
+        if(searchTermInput) searchTermInput.value = '';
+        // Re-apply filters (which will now show all tasks) and hide clear button
+        applyFiltersAndDisplay();
+    });
+
+    // Add listener for the edit form submission
+    const editTaskForm = document.getElementById('edit-task-form');
+    editTaskForm?.addEventListener('submit', handleEditTaskSubmit);
 }
+
+// --- Filtering Logic ---
+
+/**
+ * Applies current filters to the tasks and re-displays them.
+ */
+function applyFiltersAndDisplay() {
+    const statusFilter = document.getElementById('filter-status')?.value || 'all';
+    const priorityFilter = document.getElementById('filter-priority')?.value || 'all';
+    const searchTerm = document.getElementById('search-term')?.value.toLowerCase() || '';
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+    // Determine if any filters are active (excluding 'all' and empty search)
+    const filtersActive = statusFilter !== 'all' || priorityFilter !== 'all' || searchTerm !== '';
+    if (clearFiltersBtn) {
+        clearFiltersBtn.style.display = filtersActive ? 'inline-block' : 'none'; // Show/hide clear button
+    }
+
+
+    let filteredTasks = currentTasks; // Start with all tasks
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => task.status === statusFilter);
+    }
+
+    // Apply priority filter
+    if (priorityFilter !== 'all') {
+        filteredTasks = filteredTasks.filter(task => task.priority === priorityFilter);
+    }
+
+    // Apply search term filter (checks title and description)
+    if (searchTerm) {
+        filteredTasks = filteredTasks.filter(task =>
+            task.title.toLowerCase().includes(searchTerm) ||
+            (task.description && task.description.toLowerCase().includes(searchTerm))
+        );
+    }
+
+    // Re-display the filtered tasks
+    displayTasks(filteredTasks);
+}
+
+
+// --- CRUD Handlers ---
 
 /**
  * Handles the submission of the 'Add Task' form.

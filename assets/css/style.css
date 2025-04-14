@@ -103,7 +103,62 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
-    border-bottom-color: var(--color-accent);
+     border-bottom-color: var(--color-accent);
+}
+
+/* --- Filter/Search Controls --- */
+.filters {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 20px; /* Space between filter groups */
+    padding: 15px;
+    background-color: var(--color-secondary-bg);
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 30px;
+    align-items: flex-end; /* Align items to the bottom */
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column; /* Stack label and input/select */
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 0; /* Remove default margin */
+}
+
+.filters select,
+.filters input[type="text"] {
+    padding: 8px 5px; /* Adjust padding */
+    border-radius: var(--border-radius-small);
+    border: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border); /* Keep consistent look */
+    min-width: 150px; /* Give selects some width */
+}
+.filters input[type="text"] {
+     min-width: 200px; /* More width for search */
+}
+
+.filters select:focus,
+.filters input[type="text"]:focus {
+     border-color: var(--color-accent);
+     box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2); /* Subtle focus ring */
+}
+
+/* Secondary button style for Clear Filters */
+.button-secondary {
+    background-color: var(--color-secondary-bg);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    padding: 7px 15px; /* Slightly smaller padding */
+}
+.button-secondary:hover {
+    background-color: #e0e0e0; /* Slightly darker gray */
+    border-color: #005bb5;
+    color: #005bb5;
 }
 
 /* Basic Button Style */

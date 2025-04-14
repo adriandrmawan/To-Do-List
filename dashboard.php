@@ -42,9 +42,30 @@ $username = isset($_SESSION['username']) ? escape($_SESSION['username']) : 'User
         <!-- Task List Section -->
         <section class="task-list-section">
             <h2>Your Tasks</h2>
-            <!-- Filters/Search (to be implemented) -->
+            <!-- Filters/Search -->
             <div class="filters">
-                <!-- Filter/Search controls go here -->
+                <div class="filter-group">
+                    <label for="filter-status">Status:</label>
+                    <select id="filter-status" name="status">
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                 <div class="filter-group">
+                    <label for="filter-priority">Priority:</label>
+                    <select id="filter-priority" name="priority">
+                        <option value="all">All</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                 <div class="filter-group">
+                     <label for="search-term">Search:</label>
+                    <input type="text" id="search-term" name="search" placeholder="Search title/description...">
+                </div>
+                 <button id="clear-filters-btn" class="button button-secondary" style="display: none;">Clear Filters</button> <!-- Initially hidden -->
             </div>
 
             <!-- Container where tasks will be loaded by JS -->
