@@ -1,24 +1,24 @@
 # Active Context: To-Do List Web Application (Initialization)
 
 ## 1. Current Focus
-- Improving sidebar UI/UX.
-- Final testing and addressing any remaining refinements or bugs.
+- Addressing task card layout issue (Priority/Due Date alignment).
+- Final testing and potential minor refinements based on user feedback.
 
 ## 2. Recent Changes
-- Integrated status filtering into sidebar navigation links (`dashboard.php`, `tasks.js`).
-- Removed status/priority dropdowns from sidebar (`dashboard.php`, `tasks.js`).
-- Updated sidebar CSS (`style.css`).
+- Added FontAwesome icons to sidebar navigation links (`dashboard.php`).
+- Added CSS for icon spacing in sidebar links (`style.css`).
+- Attempted fixes for task card meta layout (`style.css`, `tasks.js`).
 
 ## 3. Next Steps (Immediate Plan)
-1.  **Refine Sidebar UI**: Improve visual distinction and interaction based on user feedback.
-2.  **User Testing**: Test integrated sidebar filters, search, and stats.
+1.  **Fix Task Card Layout**: Correctly align Priority (left) and Due Date (right) in the task card meta section using CSS.
+2.  **User Testing**: Test all features including sidebar, header, animations, and task card layout.
 3.  **Security Hardening (Optional)**: Implement CSRF protection.
 4.  **Final Debugging**.
 
 ## 4. Active Decisions & Considerations
-- **Database Naming**: Confirmed as `todo_app_db`.
-- **Database Creation**: User needs SQL commands for DB and tables.
-- **Directory Structure**: Confirmed: Create project structure directly within `c:/xampp/htdocs/To-Do` (no `todo-app` subfolder).
+- **Database Naming**: `todo_app_db`.
+- **Database Creation**: Assumed complete by user.
+- **Directory Structure**: Project root is `c:/xampp/htdocs/To-Do`.
 - **Technology Choice**: Sticking to Vanilla JS for now, as requested, unless specific complexities arise that warrant jQuery.
 
 ## 5. Important Patterns & Preferences

@@ -157,7 +157,7 @@ function createTaskElement(task) {
             ${description ? `<p class="task-description">${description}</p>` : ''}
             <div class="task-meta">
                 <span>Priority: <span class="priority-label">${task.priority}</span></span>
-                ${task.due_date ? `<span>Due: ${task.due_date}</span>` : ''}
+                ${task.due_date ? `<span class="task-due-date">Due: ${task.due_date}</span>` : ''}
             </div>
         </div>
         <div class="task-card-actions">

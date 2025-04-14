@@ -1,30 +1,58 @@
-# Progress: To-Do List Web Application (Initialization)
+# Progress: To-Do List Web Application
 
 ## 1. Current Status
-- **Overall**: Project initialization phase.
-- **Memory Bank**: Core documentation files created (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`).
-- **Database**: Not yet set up. Requires user confirmation/action.
-- **File Structure**: Project directories and core files not yet created.
-- **Features**: No features implemented yet.
+- **Overall**: Core functionality implemented, UI refinement in progress.
+- **Memory Bank**: Core files created and updated.
+- **Database**: Schema defined, assumed created by user. Connection configured.
+- **File Structure**: Project directories and core files created.
+- **Features Implemented**:
+    - User Authentication (Register, Login, Logout - Backend & Frontend Logic)
+    - Task Management API (CRUD: Create, Read, Update, Delete)
+    - Task Management Frontend (Add, View, Edit Modal, Delete, Complete/Pending via AJAX)
+    - Filtering (by Status via Sidebar Links) & Searching (by Keyword)
+    - Basic Responsive Layout (Desktop w/ Sidebar, Tablet/Mobile adjustments)
+    - Basic Animations (Task Load, Delete Fade, Complete Line-through, Custom Checkbox, Button Loading)
+    - Initial Apple-inspired Styling (Forms, Buttons, Cards, Modal, Header, Sidebar)
+    - Header Blur Effect on Scroll
+    - Sidebar Integration (Stats, Status Filters, Search)
+- **Features Remaining/Refinements**:
+    - Fix Task Card Meta Layout (Priority/Due Date alignment) - **Current Blocker**
+    - Advanced Animations (Optional: Button ripple, more complex transitions)
+    - Advanced UI (Optional: Mobile touch gestures)
+    - Security Hardening (Optional: CSRF Protection)
+    - Documentation (User Guide, Developer Docs update in README.md)
+    - Thorough Testing & Debugging
 
 ## 2. What Works
-- N/A (Project just started)
+- User registration, login, logout.
+- Adding new tasks.
+- Viewing tasks (pending/completed sections).
+- Marking tasks complete/pending (with custom checkbox).
+- Deleting tasks (with confirmation and animation).
+- Editing tasks via modal.
+- Filtering tasks by status (using sidebar links).
+- Searching tasks by keyword.
+- Basic responsive layout adjustments.
+- Header blur effect.
+- Sidebar statistics display.
+- Button loading indicators.
 
-## 3. What's Left to Build (High-Level from Prompt)
-1.  Database Setup (Tables: `users`, `tasks`)
-2.  Project Directory Structure Creation
-3.  Core Configuration Files (`includes/config.php`, `includes/db.php`)
-4.  Authentication System (Backend API & Frontend Pages/Logic for Register, Login, Logout)
-5.  Task Management Backend API (CRUD endpoints)
-6.  Dashboard Frontend (HTML structure, CSS styling - Apple theme)
-7.  Task Management Frontend Logic (JS for AJAX CRUD, display, filtering, searching)
-8.  UI/UX Enhancements (Animations, Responsiveness)
-9.  Testing (Functional, Responsive, Performance)
-10. Documentation (User Guide, Developer Docs - README.md update)
+## 3. What's Left to Build
+- **High Priority**: Fix task card meta layout.
+- **Optional**:
+    - CSRF Protection.
+    - Advanced animations/UI (touch gestures, etc.).
+    - Update README.md documentation.
+- **Ongoing**: Testing and bug fixing.
 
 ## 4. Known Issues / Blockers
-- Database `todo_app_db` and tables need to be created by the user using the provided SQL commands.
+- **Task Card Layout**: Priority and Due Date in the meta section are not correctly aligned (Priority left, Due Date right). Needs CSS fix.
+- **Login PDO Issue (Resolved)**: Encountered and fixed `SQLSTATE[HY093]: Invalid parameter number` error by using a two-step query.
 
 ## 5. Evolution of Project Decisions
-- **Initial Decision**: Create Memory Bank files first to establish documentation baseline.
-- **Clarification**: Confirmed project structure will be created directly within `c:/xampp/htdocs/To-Do` (no `todo-app` subfolder).
+- Created Memory Bank files first.
+- Confirmed project structure directly within `c:/xampp/htdocs/To-Do`.
+- Confirmed database name `todo_app_db`.
+- Resolved login PDO error by splitting username/email check into two queries.
+- Integrated status filters into sidebar navigation links instead of separate dropdowns.
+- Skipped mobile touch gestures due to complexity.

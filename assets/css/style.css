@@ -497,8 +497,11 @@ button[type="submit"]:disabled {
     font-size: 12px;
     color: var(--color-text-secondary);
     display: flex;
+    width: 100%; /* Ensure it takes full width */
     justify-content: space-between; /* Push items apart */
-    /* gap: 15px; /* Remove gap, space-between handles it */ */
+}
+.task-card .task-meta .task-due-date {
+    /* margin-left: auto; /* No longer needed with space-between */ */
 }
 .task-card .task-meta .priority-label {
     text-transform: capitalize;
