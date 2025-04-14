@@ -158,7 +158,10 @@ function createTaskElement(task) {
         <div class="task-card-actions">
             <button class="edit-task-btn icon-btn" title="Edit Task" data-id="${task.id}"><i class="fas fa-pencil-alt"></i></button>
             <button class="delete-task-btn icon-btn" title="Delete Task" data-id="${task.id}"><i class="fas fa-trash-alt"></i></button>
-            <input type="checkbox" class="complete-task-chk" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
+            <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
+                <span class="custom-checkbox-visual"></span>
+            </label>
         </div>
     `;
     return taskElement;
@@ -263,6 +266,7 @@ async function handleAddTask(event) {
     const titleInput = form.querySelector('#new-task-title');
     const descriptionInput = form.querySelector('#new-task-description');
     const messageElementId = 'add-task-message'; // Assuming an element for messages
+    const submitButton = form.querySelector('button[type="submit"]');
 
     const taskData = {
         title: titleInput.value.trim(),
@@ -277,7 +281,10 @@ async function handleAddTask(event) {
     }
 
     console.log("Adding task:", taskData);
-    // Optional: Show loading state
+    if(submitButton) {
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+    }
 
     try {
         const response = await fetch('api/tasks/create.php', {
@@ -304,6 +311,12 @@ async function handleAddTask(event) {
         console.error("Could not add task:", error);
         if (typeof showMessage === 'function') showMessage(messageElementId, `Error adding task: ${error.message}.`, 'error');
         else alert(`Error adding task: ${error.message}.`);
+    } finally {
+        // Ensure button is re-enabled and loading class removed
+        if(submitButton) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+        }
     }
 }
 
@@ -434,6 +447,7 @@ async function handleEditTaskSubmit(event) {
     const form = event.target;
     const taskId = form.querySelector('#edit-task-id').value;
     const messageElementId = 'edit-task-message';
+    const submitButton = form.querySelector('button[type="submit"]');
 
     const updatedData = {
         task_id: taskId,
@@ -452,6 +466,10 @@ async function handleEditTaskSubmit(event) {
 
     console.log("Submitting updated task data:", updatedData);
     if (typeof showMessage === 'function') showMessage(messageElementId, 'Saving changes...', 'info');
+    if(submitButton) {
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+    }
 
     try {
         const response = await fetch('api/tasks/update.php', {
@@ -474,6 +492,12 @@ async function handleEditTaskSubmit(event) {
         console.error("Could not update task:", error);
         if (typeof showMessage === 'function') showMessage(messageElementId, `Error updating task: ${error.message}.`, 'error');
         else alert(`Error updating task: ${error.message}.`);
+    } finally {
+         // Ensure button is re-enabled and loading class removed
+         if(submitButton) {
+             submitButton.disabled = false;
+             submitButton.classList.remove('loading');
+         }
     }
 }
 

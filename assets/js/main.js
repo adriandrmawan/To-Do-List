@@ -47,8 +47,11 @@ async function handleLogin(event) {
     const messageElementId = 'login-message'; // ID of the div to show messages
     const submitButton = form.querySelector('button[type="submit"]');
 
-    showMessage(messageElementId, 'Logging in...', 'info'); // Provide feedback
-    if(submitButton) submitButton.disabled = true; // Disable button
+    showMessage(messageElementId, 'Logging in...', 'info');
+    if(submitButton) {
+        submitButton.disabled = true;
+        submitButton.classList.add('loading'); // Add loading class
+    }
 
     try {
         const response = await fetch('api/auth/login.php', {
@@ -85,7 +88,16 @@ async function handleLogin(event) {
     } catch (error) {
         console.error('Login error:', error);
         showMessage(messageElementId, `Login failed: ${error.message}. Please try again.`, 'error');
-        if(submitButton) submitButton.disabled = false; // Re-enable button on error
+        if(submitButton) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading'); // Remove loading class
+        }
+    } finally {
+         // Ensure button is re-enabled and loading class removed even if unexpected error occurs
+         if(submitButton && submitButton.disabled) {
+             submitButton.disabled = false;
+             submitButton.classList.remove('loading');
+         }
     }
 }
 
@@ -109,7 +121,10 @@ async function handleRegister(event) {
     }
 
     showMessage(messageElementId, 'Registering...', 'info');
-     if(submitButton) submitButton.disabled = true; // Disable button
+     if(submitButton) {
+         submitButton.disabled = true;
+         submitButton.classList.add('loading'); // Add loading class
+     }
 
     try {
         const response = await fetch('api/auth/register.php', {
@@ -145,6 +160,15 @@ async function handleRegister(event) {
     } catch (error) {
         console.error('Registration error:', error);
         showMessage(messageElementId, `Registration failed: ${error.message}. Please try again.`, 'error');
-         if(submitButton) submitButton.disabled = false; // Re-enable button
+        if(submitButton) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading'); // Remove loading class
+        }
+    } finally {
+        // Ensure button is re-enabled and loading class removed
+        if(submitButton && submitButton.disabled) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+        }
     }
 }

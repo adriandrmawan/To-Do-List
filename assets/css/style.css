@@ -303,7 +303,39 @@ button[type="submit"]:active, .button:active {
 button[type="submit"]:disabled {
     background-color: #a0c7e8; /* Lighter blue when disabled */
     cursor: not-allowed;
+    opacity: 0.7; /* Dim button when disabled */
 }
+
+/* Button Loading State */
+.button.loading, button[type="submit"].loading {
+    position: relative; /* Needed for absolute positioning of spinner */
+    color: transparent !important; /* Hide original text */
+    pointer-events: none; /* Prevent clicks while loading */
+    cursor: wait;
+}
+
+.button.loading::after, button[type="submit"].loading::after {
+    content: '';
+    position: absolute;
+    width: 16px; /* Spinner size */
+    height: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px solid rgba(255, 255, 255, 0.3); /* Spinner track */
+    border-radius: 50%;
+    border-top-color: #fff; /* Spinner active color */
+    animation: button-spinner 0.6s linear infinite;
+}
+
+@keyframes button-spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 /* Message Areas (for login/register feedback) */
 .message {
@@ -534,4 +566,70 @@ select {
 }
 select:focus {
      border-bottom-color: var(--color-accent);
+}
+
+/* --- Custom Checkbox --- */
+.visually-hidden { /* Class to hide the actual checkbox input */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.custom-checkbox-label {
+  display: inline-flex; /* Align span correctly */
+  align-items: center;
+  cursor: pointer;
+  position: relative; /* Needed for positioning the visual part */
+  user-select: none; /* Prevent text selection */
+  padding-left: 28px; /* Space for the custom checkbox */
+  min-height: 20px; /* Ensure label height accommodates checkbox */
+}
+
+.custom-checkbox-visual {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 4px; /* Slightly rounded corners */
+  background-color: var(--color-primary-bg);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Style when checkbox is checked */
+.complete-task-chk:checked + .custom-checkbox-visual {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Checkmark using ::after pseudo-element */
+.custom-checkbox-visual::after {
+  content: '';
+  position: absolute;
+  display: none; /* Hidden by default */
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  /* Animation properties */
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out 0.1s; /* Fade in slightly delayed */
+}
+
+/* Show checkmark when checked */
+.complete-task-chk:checked + .custom-checkbox-visual::after {
+  display: block;
+  opacity: 1;
+}
+
+/* Focus style for accessibility */
+.complete-task-chk:focus + .custom-checkbox-visual {
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.3);
 }
