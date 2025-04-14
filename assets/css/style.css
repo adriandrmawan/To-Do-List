@@ -106,6 +106,119 @@ textarea:focus {
      border-bottom-color: var(--color-accent);
 }
 
+/* --- Task Grid Layout --- */
+.task-grid {
+    display: grid;
+    gap: 20px; /* Space between cards */
+    /* Default: 3 columns for desktop */
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+/* --- Responsive Media Queries --- */
+
+/* Tablet (e.g., iPads) */
+@media (max-width: 992px) {
+    .task-grid {
+        /* 2 columns for tablet */
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .container {
+        max-width: 90%; /* Allow more width */
+    }
+
+    /* Adjust filter layout if needed */
+    .filters {
+        gap: 15px;
+    }
+    .filters .filter-group {
+        flex-basis: calc(50% - 10px); /* Roughly 2 per row */
+    }
+     .filters input[type="text"] {
+         min-width: 100%; /* Full width search on smaller screens */
+         flex-basis: 100%;
+    }
+     .filters .button-secondary {
+         margin-top: 10px; /* Add space if it wraps */
+     }
+
+     .modal-content {
+         margin: 15% auto; /* Adjust vertical margin */
+         max-width: 80%;
+     }
+}
+
+/* Mobile (e.g., smartphones) */
+@media (max-width: 576px) {
+    .task-grid {
+        /* 1 column for mobile */
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+     h1 { font-size: 24px; }
+     h2 { font-size: 20px; }
+
+    .container {
+        max-width: 100%;
+        padding: 0 15px; /* Reduce padding */
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-header .container {
+        flex-direction: column; /* Stack header items */
+        gap: 10px;
+        text-align: center;
+    }
+     .dashboard-header .user-menu {
+         width: 100%;
+         display: flex;
+         justify-content: space-between; /* Space out welcome and logout */
+     }
+     .dashboard-header .user-menu a { margin-left: 0; }
+
+
+    .filters {
+        flex-direction: column; /* Stack filters vertically */
+        align-items: stretch; /* Make items full width */
+        gap: 15px;
+    }
+     .filters .filter-group {
+         flex-basis: auto; /* Reset basis */
+     }
+     .filters select, .filters input[type="text"] {
+         min-width: auto; /* Reset min-width */
+     }
+     .filters .button-secondary {
+         width: 100%; /* Full width clear button */
+         text-align: center;
+     }
+
+     .add-task-section {
+         padding: 15px;
+     }
+     .add-task-section button[type="submit"] {
+         width: 100%; /* Full width add button */
+     }
+
+     .task-card {
+         padding: 12px; /* Reduce padding */
+         flex-direction: column; /* Stack content and actions */
+         align-items: stretch;
+     }
+     .task-card-content { margin-right: 0; margin-bottom: 10px; }
+     .task-card-actions { justify-content: flex-end; } /* Align actions to the right */
+
+     .modal-content {
+         margin: 20% auto; /* Adjust vertical margin */
+         max-width: 95%;
+         padding: 20px;
+     }
+     .modal h2 { font-size: 20px; }
+}
+
 /* --- Filter/Search Controls --- */
 .filters {
     display: flex;
