@@ -1,18 +1,19 @@
 # Active Context: To-Do List Web Application (Initialization)
 
 ## 1. Current Focus
-- Addressing task card layout issue (Priority/Due Date alignment).
-- Final testing and potential minor refinements based on user feedback.
+- **Verify Task Card Layout**: Confirm the Priority/Due Date alignment is correct visually.
+- **User Testing**: Proceed with testing all features.
+- Potential minor refinements based on testing feedback.
 
 ## 2. Recent Changes
 - Added FontAwesome icons to sidebar navigation links (`dashboard.php`).
 - Added CSS for icon spacing in sidebar links (`style.css`).
-- Attempted fixes for task card meta layout (`style.css`, `tasks.js`).
+- Reviewed task card meta layout CSS (`style.css`) - existing rules (`display: flex; justify-content: space-between;`) appear correct for the desired alignment.
 
 ## 3. Next Steps (Immediate Plan)
-1.  **Fix Task Card Layout**: Correctly align Priority (left) and Due Date (right) in the task card meta section using CSS.
-2.  **User Testing**: Test all features including sidebar, header, animations, and task card layout.
-3.  **Security Hardening (Optional)**: Implement CSRF protection.
+1.  **Verify Task Card Layout**: Visually check if Priority (left) and Due Date (right) are aligned correctly in the task cards.
+2.  **User Testing**: Test all features (authentication, task CRUD, filtering, search, responsiveness, animations).
+3.  **Security Hardening (Optional)**: Implement CSRF protection if requested.
 4.  **Final Debugging**.
 
 ## 4. Active Decisions & Considerations
