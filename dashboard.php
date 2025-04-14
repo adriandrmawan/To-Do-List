@@ -53,8 +53,46 @@ $username = isset($_SESSION['username']) ? escape($_SESSION['username']) : 'User
             </div>
         </section>
 
-        <!-- Modals for Edit Task etc. (to be implemented) -->
-        <!-- <div id="edit-task-modal" class="modal"> ... </div> -->
+        <!-- Edit Task Modal -->
+        <div id="edit-task-modal" class="modal" style="display: none;"> <!-- Hidden by default -->
+            <div class="modal-content">
+                <span class="close-modal-btn" onclick="closeEditModal()">&times;</span>
+                <h2>Edit Task</h2>
+                <form id="edit-task-form">
+                    <input type="hidden" id="edit-task-id" name="task_id">
+                    <div class="form-group">
+                        <label for="edit-task-title">Title:</label>
+                        <input type="text" id="edit-task-title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-task-description">Description:</label>
+                        <textarea id="edit-task-description" name="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-task-priority">Priority:</label>
+                        <select id="edit-task-priority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-task-due-date">Due Date:</label>
+                        <input type="date" id="edit-task-due-date" name="due_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-task-status">Status:</label>
+                        <select id="edit-task-status" name="status">
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                    <div id="edit-task-message" class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+        <!-- End Edit Task Modal -->
 
     </div> <!-- /container -->
 </main>

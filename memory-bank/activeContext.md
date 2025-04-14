@@ -1,22 +1,21 @@
 # Active Context: To-Do List Web Application (Initialization)
 
 ## 1. Current Focus
-- Implementing UI/UX details based on Apple-inspired design specifications.
-- Styling core components (header, forms, task cards).
-- Implementing basic animations and responsiveness.
+- Refining UI/UX details (styling, animations).
+- Implementing Filtering/Searching.
+- Implementing Responsiveness.
 
 ## 2. Recent Changes
-- Implemented backend Task Management API (`api/tasks/create.php`, `read.php`, `update.php`, `delete.php`).
-- Updated frontend JS (`assets/js/tasks.js`) to handle task CRUD operations via AJAX (add, load, display, delete, toggle status).
+- Added Edit Task modal HTML structure to `dashboard.php`.
+- Added CSS for modal styling in `style.css`.
+- Updated `assets/js/tasks.js` to handle opening, populating, and submitting the edit task modal, calling the `update.php` API. Core task CRUD is now functionally complete.
 
 ## 3. Next Steps (Immediate Plan)
-1.  **Style Core Pages**: Apply base styles and layout to `login.php`, `register.php`, and `dashboard.php` using `assets/css/style.css`.
-2.  **Style Task Cards**: Implement the Apple-inspired design for task cards in `style.css`.
-3.  **Implement Modals**: Create HTML/CSS structure for modals (e.g., for editing tasks) and add JS logic to show/hide them.
-4.  **Implement Task Editing**: Add edit button functionality in `tasks.js` to populate and submit the edit modal, calling the `update.php` API.
-5.  **Implement Filtering/Searching**: Add UI controls and JS logic.
-6.  **Implement Animations**: Apply CSS/JS animations as specified.
-7.  **Refine Responsiveness**: Add media queries and adjust layouts for different screen sizes.
+1.  **Implement Filtering/Searching**: Add UI controls (e.g., dropdowns, search input) to `dashboard.php` and corresponding JS logic in `tasks.js` to filter/search tasks dynamically (likely by modifying the `api/tasks/read.php` call or filtering client-side).
+2.  **Refine Styling**: Enhance CSS in `style.css` for closer adherence to Apple aesthetics (focus states, button effects, etc.).
+3.  **Implement Animations**: Apply specified CSS/JS animations (task interactions, transitions).
+4.  **Implement Responsiveness**: Add media queries in `style.css` and adjust layouts/components for tablet and mobile.
+5.  **Testing & Debugging**.
 
 ## 4. Active Decisions & Considerations
 - **Database Naming**: Confirmed as `todo_app_db`.

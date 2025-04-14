@@ -5,6 +5,9 @@
 // function escapeHTML(str) { ... }
 // function showMessage(elementId, message, type = 'info') { ... }
 
+// Store loaded tasks globally within this script's scope to access for editing
+let currentTasks = [];
+
 document.addEventListener('DOMContentLoaded', () => {
     // Only run task-specific code if we are on the dashboard
     const taskListContainer = document.getElementById('task-list-container');
@@ -44,8 +47,10 @@ async function loadTasks() {
         const result = await response.json();
 
         if (result.success) {
-            displayTasks(result.tasks);
+            currentTasks = result.tasks; // Store tasks globally
+            displayTasks(currentTasks); // Pass the stored tasks
         } else {
+            currentTasks = []; // Clear tasks on error
             console.error("API error loading tasks:", result.message);
             showMessage('task-list-container', `Failed to load tasks: ${result.message}`, 'error');
         }
@@ -152,9 +157,7 @@ function setupEventListeners(taskContainer, addTaskForm) {
         if (!taskId) return; // Exit if click wasn't on an actionable item with an ID
 
         if (target.classList.contains('edit-task-btn') || target.closest('.edit-task-btn')) {
-             console.log("Edit button clicked for task:", taskId);
-             // handleEditTask(taskId); // Placeholder - needs modal implementation
-             alert(`Edit functionality for task ${taskId} not yet implemented.`);
+             openEditModal(taskId); // Call function to open and populate modal
         } else if (target.classList.contains('delete-task-btn') || target.closest('.delete-task-btn')) {
              handleDeleteTask(taskId);
         } else if (target.classList.contains('complete-task-chk')) {
@@ -307,9 +310,119 @@ async function handleToggleComplete(taskId, isComplete) {
         const checkbox = document.querySelector(`.task-card[data-task-id="${taskId}"] .complete-task-chk`);
         if (checkbox) checkbox.checked = !isComplete;
     }
+
+    // Add listener for the edit form submission
+    const editTaskForm = document.getElementById('edit-task-form');
+    editTaskForm?.addEventListener('submit', handleEditTaskSubmit);
 }
 
-// Placeholder for Edit Task Modal functionality
+// --- Edit Modal Functions ---
+
+/**
+ * Opens the edit modal and populates it with task data.
+ * @param {string} taskId The ID of the task to edit.
+ */
+function openEditModal(taskId) {
+    const modal = document.getElementById('edit-task-modal');
+    const form = document.getElementById('edit-task-form');
+    if (!modal || !form) {
+        console.error("Edit modal or form not found!");
+        return;
+    }
+
+    // Find the task data from the globally stored list
+    const task = currentTasks.find(t => t.id == taskId); // Use == for potential type difference
+    if (!task) {
+        console.error("Task data not found for ID:", taskId);
+        alert("Could not find task data to edit.");
+        return;
+    }
+
+    // Populate the form fields
+    form.querySelector('#edit-task-id').value = task.id;
+    form.querySelector('#edit-task-title').value = task.title;
+    form.querySelector('#edit-task-description').value = task.description || '';
+    form.querySelector('#edit-task-priority').value = task.priority;
+    form.querySelector('#edit-task-status').value = task.status;
+    // Handle date format (input type="date" expects YYYY-MM-DD)
+    form.querySelector('#edit-task-due-date').value = task.due_date || '';
+
+    // Clear any previous messages
+    const messageElement = form.querySelector('#edit-task-message');
+    if (messageElement) {
+        messageElement.textContent = '';
+        messageElement.style.display = 'none';
+    }
+
+    // Display the modal
+    modal.style.display = 'block';
+}
+
+/**
+ * Closes the edit modal. (Can be called via onclick attribute or event listener)
+ */
+function closeEditModal() {
+    const modal = document.getElementById('edit-task-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+/**
+ * Handles the submission of the edit task form.
+ */
+async function handleEditTaskSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const taskId = form.querySelector('#edit-task-id').value;
+    const messageElementId = 'edit-task-message';
+
+    // Collect updated data from the form
+    const updatedData = {
+        task_id: taskId,
+        title: form.querySelector('#edit-task-title').value.trim(),
+        description: form.querySelector('#edit-task-description').value.trim(),
+        priority: form.querySelector('#edit-task-priority').value,
+        status: form.querySelector('#edit-task-status').value,
+        due_date: form.querySelector('#edit-task-due-date').value || null // Send null if empty
+    };
+
+     if (!updatedData.title) {
+        if (typeof showMessage === 'function') showMessage(messageElementId, 'Title cannot be empty.', 'error');
+        else alert('Title cannot be empty.');
+        return;
+    }
+
+    console.log("Submitting updated task data:", updatedData);
+    if (typeof showMessage === 'function') showMessage(messageElementId, 'Saving changes...', 'info');
+
+    try {
+        const response = await fetch('api/tasks/update.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            console.log("Task updated successfully:", result);
+            closeEditModal();
+            loadTasks(); // Reload the task list to show changes
+        } else {
+            console.error("API error updating task:", result.message);
+            if (typeof showMessage === 'function') showMessage(messageElementId, `Failed to update task: ${result.message}`, 'error');
+            else alert(`Failed to update task: ${result.message}`);
+        }
+    } catch (error) {
+        console.error("Could not update task:", error);
+        if (typeof showMessage === 'function') showMessage(messageElementId, `Error updating task: ${error.message}.`, 'error');
+        else alert(`Error updating task: ${error.message}.`);
+    }
+}
+
+
+// Placeholder for Edit Task Modal functionality (Now implemented above)
 // async function handleEditTask(taskId) {
 //     console.log("Initiating edit for task:", taskId);
 //     // 1. Fetch task details (optional, could pass data if available)
