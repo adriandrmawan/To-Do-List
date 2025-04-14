@@ -91,8 +91,8 @@ textarea {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--color-border);
-    outline: none;
-    transition: border-color 0.2s ease;
+    outline: none; /* Remove default focus outline */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Add box-shadow transition */
 }
 textarea {
     min-height: 80px;
@@ -104,6 +104,8 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 textarea:focus {
      border-bottom-color: var(--color-accent);
+     /* Add a subtle glow effect like Apple's focus rings */
+     box-shadow: 0 1px 0 0 var(--color-accent);
 }
 
 /* --- Task Grid Layout --- */
@@ -295,7 +297,8 @@ button[type="submit"]:hover, .button:hover {
 }
 
 button[type="submit"]:active, .button:active {
-    transform: scale(0.98);
+    transform: scale(0.98); /* Slightly shrink */
+    background-color: #004a99; /* Even darker blue when pressed */
 }
 button[type="submit"]:disabled {
     background-color: #a0c7e8; /* Lighter blue when disabled */

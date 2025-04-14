@@ -4,14 +4,15 @@
 - Final testing and potential minor refinements based on user feedback.
 
 ## 2. Recent Changes
-- Implemented staggered loading animation for task cards in `assets/js/tasks.js`.
-- Implemented fade-out animation on task deletion in `assets/js/tasks.js`.
-- Implemented line-through animation for completed task titles in `assets/js/tasks.js`.
+- Refined CSS focus styles for form inputs/textareas in `style.css`.
+- Refined CSS active state styles for buttons in `style.css`.
 
 ## 3. Next Steps (Immediate Plan)
-1.  **User Testing**: User to test the current functionality (Auth, CRUD, Filtering, Responsiveness, Basic Animations).
-2.  **Refinements (Optional)**: Address any bugs or minor UI tweaks based on testing.
-3.  **Consider Advanced Features**: Decide whether to implement further features like header blur, sidebar, more animations, touch gestures, CSRF protection based on user priority.
+1.  **User Testing**: User to test the current functionality (Auth, CRUD, Filtering, Responsiveness, Basic Animations, Styling Refinements).
+2.  **Implement Advanced Animations (Optional)**: Apply remaining specified animations (e.g., custom checkbox, button loading state).
+3.  **Implement Advanced UI (Optional)**: Add desktop sidebar, header blur effect.
+4.  **Security Hardening (Optional)**: Implement CSRF protection.
+5.  **Final Debugging**.
 
 ## 4. Active Decisions & Considerations
 - **Database Naming**: Confirmed as `todo_app_db`.
