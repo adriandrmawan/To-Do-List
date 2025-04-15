@@ -38,10 +38,12 @@ try {
     $sql = "SELECT id, title, description, status, priority, created_at, due_date
             FROM tasks
             WHERE user_id = :user_id
-            ORDER BY created_at DESC"; // Example ordering
+            ORDER BY
+                status ASC, -- Puts 'pending' before 'completed'
+                FIELD(priority, 'high', 'medium', 'low') ASC, -- Sorts by priority High > Medium > Low
+                created_at DESC";
 
     // Add filtering/sorting based on GET parameters later if needed
-    // e.g., ?status=pending&sort=priority_high
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
