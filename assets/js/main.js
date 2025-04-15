@@ -47,7 +47,7 @@ async function handleLogin(event) {
     const messageElementId = 'login-message'; // ID of the div to show messages
     const submitButton = form.querySelector('button[type="submit"]');
 
-    showMessage(messageElementId, 'Logging in...', 'info');
+    showMessage(messageElementId, t_js('js_logging_in'), 'info');
     if(submitButton) {
         submitButton.disabled = true;
         submitButton.classList.add('loading'); // Add loading class
@@ -81,13 +81,13 @@ async function handleLogin(event) {
                  window.location.href = 'dashboard.php'; // Or use result.redirect if provided
             }, 1000); // 1 second delay
         } else {
-            showMessage(messageElementId, result.message || 'Login failed.', 'error');
+            showMessage(messageElementId, result.message || t_js('js_login_failed_default'), 'error');
             if(submitButton) submitButton.disabled = false; // Re-enable button on failure
         }
 
     } catch (error) {
-        console.error('Login error:', error);
-        showMessage(messageElementId, `Login failed: ${error.message}. Please try again.`, 'error');
+        console.error('Login error:', error); // Keep console error in English
+        showMessage(messageElementId, t_js('js_login_failed_error', error.message), 'error');
         if(submitButton) {
             submitButton.disabled = false;
             submitButton.classList.remove('loading'); // Remove loading class
@@ -128,15 +128,15 @@ async function handleRegister(event) {
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm_password');
     if (password !== confirmPassword) {
-        showMessage(messageElementId, 'Passwords do not match.', 'error');
+        showMessage(messageElementId, t_js('js_passwords_no_match'), 'error');
         return; // Stop submission
     }
      if (password.length < 6) {
-        showMessage(messageElementId, 'Password must be at least 6 characters long.', 'error');
+        showMessage(messageElementId, t_js('js_password_too_short'), 'error');
         return;
     }
 
-    showMessage(messageElementId, 'Registering...', 'info');
+    showMessage(messageElementId, t_js('js_registering'), 'info');
      if(submitButton) {
          submitButton.disabled = true;
          submitButton.classList.add('loading'); // Add loading class
@@ -169,13 +169,13 @@ async function handleRegister(event) {
                  window.location.href = 'login.php';
             }, 2000); // Redirect after 2 seconds
         } else {
-            showMessage(messageElementId, result.message || 'Registration failed.', 'error');
+            showMessage(messageElementId, result.message || t_js('js_registration_failed_default'), 'error');
              if(submitButton) submitButton.disabled = false; // Re-enable button
         }
 
     } catch (error) {
-        console.error('Registration error:', error);
-        showMessage(messageElementId, `Registration failed: ${error.message}. Please try again.`, 'error');
+        console.error('Registration error:', error); // Keep console error in English
+        showMessage(messageElementId, t_js('js_registration_failed_error', error.message), 'error');
         if(submitButton) {
             submitButton.disabled = false;
             submitButton.classList.remove('loading'); // Remove loading class

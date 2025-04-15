@@ -1107,3 +1107,38 @@ footer {
 .welcome-text {
     color: var(--color-text-secondary);
 }
+
+/* Language Switcher Styles */
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Small gap between elements */
+    margin-left: 10px; /* Add some space to its left */
+}
+
+.lang-switcher a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 3px 5px; /* Small padding */
+    border-radius: 4px; /* Slightly rounded corners */
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.lang-switcher a:hover {
+    color: var(--color-accent);
+    background-color: rgba(0, 113, 227, 0.05); /* Light blue background on hover */
+}
+
+.lang-switcher a.active {
+    color: var(--color-accent);
+    font-weight: 600; /* Bolder for active language */
+    /* Optional: Add a background or border to highlight active */
+    /* background-color: rgba(0, 113, 227, 0.1); */
+}
+
+.lang-switcher span {
+    color: var(--color-border); /* Use border color for the separator */
+    font-size: 12px; /* Make separator slightly smaller */
+    user-select: none; /* Prevent selecting the separator */
+}

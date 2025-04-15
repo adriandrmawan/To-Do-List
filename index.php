@@ -1,4 +1,6 @@
 <?php
+// Include necessary files
+require_once 'includes/config.php'; // Load config first (for language)
 require_once 'includes/functions.php';
 
 // Check if user is logged in
@@ -9,7 +11,7 @@ if (isLoggedIn()) {
 }
 
 // If not logged in, display the landing page content below
-$pageTitle = "ToDo App - Organize Your Life"; // Updated Title
+$pageTitleKey = "page_title_index"; // Use translation key for title
 
 // Include the unified header
 require_once 'includes/header.php';
@@ -18,10 +20,10 @@ require_once 'includes/header.php';
     <!-- Hero section -->
     <section class="hero-section">
         <div class="container">
-            <h1>To-Do. Simplified.</h1>
-            <p class="subtitle">Focus on what matters most with our elegantly designed task management solution.</p>
+            <h1><?php echo t('index_hero_title'); ?></h1>
+            <p class="subtitle"><?php echo t('index_hero_subtitle'); ?></p>
              <div class="cta-buttons">
-                 <a href="register.php" class="button cta-button">Get Started Free</a>
+                 <a href="register.php" class="button cta-button"><?php echo t('index_hero_cta'); ?></a>
                  <!-- Removed secondary sign-in button from hero, it's in the header -->
              </div>
         </div>
@@ -37,7 +39,7 @@ require_once 'includes/header.php';
     <!-- Features section (Optional - adapted from example) -->
     <section class="features">
         <div class="container"> <!-- Added container for padding -->
-            <h2>Simply Powerful</h2>
+            <h2><?php echo t('index_features_title'); ?></h2>
             <div class="feature-grid">
                 <div class="feature">
                     <div class="feature-icon">
@@ -46,8 +48,8 @@ require_once 'includes/header.php';
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                     </div>
-                    <h3>Quick Add</h3>
-                    <p>Add tasks in seconds with our streamlined interface designed for speed and efficiency.</p>
+                    <h3><?php echo t('index_feature1_title'); ?></h3>
+                    <p><?php echo t('index_feature1_desc'); ?></p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">
@@ -56,8 +58,8 @@ require_once 'includes/header.php';
                             <polyline points="22 4 12 14.01 9 11.01"></polyline>
                         </svg>
                     </div>
-                    <h3>Instant Progress</h3>
-                    <p>Mark tasks complete with a single click and feel the satisfaction of getting things done.</p>
+                    <h3><?php echo t('index_feature2_title'); ?></h3>
+                    <p><?php echo t('index_feature2_desc'); ?></p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">
@@ -67,8 +69,8 @@ require_once 'includes/header.php';
                             <line x1="9" y1="21" x2="9" y2="9"></line>
                         </svg>
                     </div>
-                    <h3>Beautiful Design</h3>
-                    <p>Enjoy a thoughtfully crafted experience with attention to every detail, inspired by Apple design.</p>
+                    <h3><?php echo t('index_feature3_title'); ?></h3>
+                    <p><?php echo t('index_feature3_desc'); ?></p>
                 </div>
             </div>
         </div>
@@ -77,9 +79,9 @@ require_once 'includes/header.php';
     <!-- CTA section (Adapted from example) -->
     <section class="cta">
          <div class="container"> <!-- Added container for padding -->
-            <h2>Start Organizing Today</h2>
-            <p>Experience a new level of productivity with our beautifully simple to-do list app.</p>
-            <a href="register.php" class="button cta-button">Create Account</a>
+            <h2><?php echo t('index_cta_title'); ?></h2>
+            <p><?php echo t('index_cta_subtitle'); ?></p>
+            <a href="register.php" class="button cta-button"><?php echo t('index_cta_button'); ?></a>
         </div>
     </section>
 

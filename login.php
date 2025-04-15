@@ -1,4 +1,6 @@
 <?php
+// Include necessary files
+require_once 'includes/config.php'; // Load config first (for language)
 require_once 'includes/functions.php';
 
 // If user is already logged in, redirect to dashboard
@@ -6,31 +8,31 @@ if (isLoggedIn()) {
     redirect('dashboard.php');
 }
 
-// Include header
-$pageTitle = "Sign In - ToDo App"; // Optional: Set a specific page title
+// Set page title key for translation
+$pageTitleKey = "page_title_login";
 require_once 'includes/header.php'; // Use unified header
 ?>
 
 <div class="auth-container"> <!-- Wrapper for centering -->
     <div class="auth-card"> <!-- Card styling -->
-        <h1>Sign In</h1>
+        <h1><?php echo t('login_heading'); ?></h1>
 
         <div id="login-message" class="message" style="display: none;"></div> <!-- Message area inside card -->
 
         <form id="login-form" class="auth-form" action="api/auth/login.php" method="POST">
             <div class="form-group">
-                <label for="username">Username or Email</label>
+                <label for="username"><?php echo t('login_label_username'); ?></label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password"><?php echo t('login_label_password'); ?></label>
                 <input type="password" id="password" name="password" required>
             </div>
             <!-- Add CSRF token field later -->
-            <button type="submit" class="button button-primary button-full-width">Sign In</button>
+            <button type="submit" class="button button-primary button-full-width"><?php echo t('login_button_submit'); ?></button>
         </form>
 
-        <p class="auth-switch-link">Don't have an account? <a href="register.php">Sign Up</a>.</p>
+        <p class="auth-switch-link"><?php echo t('login_switch_text'); ?> <a href="register.php"><?php echo t('login_switch_link'); ?></a>.</p>
     </div>
 </div> <!-- /auth-container -->
 

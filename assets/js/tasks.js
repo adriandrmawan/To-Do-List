@@ -30,20 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
  * Fetches tasks from the API and initiates display.
  */
 async function loadTasks() {
-    console.log('Loading tasks...');
+    console.log(t_js('js_loading_tasks')); // Console log can remain in English or be translated
     const container = document.getElementById('task-list-container');
     if (!container) return;
-    container.innerHTML = '<p>Loading tasks...</p>'; // Show loading state
+    container.innerHTML = `<p>${t_js('js_loading_tasks')}</p>`; // Show loading state
 
     try {
         const response = await fetch('api/tasks/read.php'); // GET request by default
         if (!response.ok) {
             if (response.status === 401) {
-                 console.error('Authentication error loading tasks.');
-                 showMessage('task-list-container', 'Authentication error. Please login again.', 'error');
+                 console.error(t_js('js_auth_error_load'));
+                 showMessage('task-list-container', t_js('js_auth_error_login'), 'error');
                  return;
             }
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Use template literal for error message construction if needed, or pass status to t_js
+            throw new Error(t_js('js_http_error', response.status));
         }
         const result = await response.json();
 
@@ -52,13 +53,13 @@ async function loadTasks() {
             applyFiltersAndDisplay(); // Display initially filtered (or all) tasks
         } else {
             currentTasks = [];
-            console.error("API error loading tasks:", result.message);
-            showMessage('task-list-container', `Failed to load tasks: ${result.message}`, 'error');
+            console.error(t_js('js_api_error_load', result.message));
+            showMessage('task-list-container', t_js('js_fail_load_tasks', result.message), 'error');
             displayTasks([]);
         }
     } catch (error) {
-        console.error("Could not load tasks:", error);
-        showMessage('task-list-container', `Error loading tasks: ${error.message}.`, 'error');
+        console.error("Could not load tasks:", error); // Keep console error in English for debugging
+        showMessage('task-list-container', t_js('js_error_load_tasks', error.message), 'error');
         displayTasks([]);
     }
 }
@@ -77,8 +78,8 @@ function displayTasks(tasks) {
         container.innerHTML = `
             <div class="empty-state">
                 <i class="fas fa-tasks"></i>
-                <h3>No tasks yet</h3>
-                <p>Click "New Task" or press "/" to create your first task</p>
+                <h3>${t_js('js_no_tasks_yet')}</h3>
+                <p>${t_js('js_no_tasks_prompt')}</p>
             </div>
         `;
         return;
@@ -125,15 +126,20 @@ function createTaskElement(task, view = 'list') {
     taskElement.className = `task-card priority-${task.priority} status-${task.status}`;
     taskElement.dataset.taskId = task.id;
 
-    const title = (typeof escapeHTML === 'function' ? escapeHTML(task.title) : task.title) || 'Untitled Task';
+    // Use t_js for default title if task.title is empty
+    const title = (typeof escapeHTML === 'function' ? escapeHTML(task.title) : task.title) || t_js('js_untitled_task');
     const description = (typeof escapeHTML === 'function' ? escapeHTML(task.description || '') : (task.description || ''));
     const titleClass = task.status === 'completed' ? 'task-title task-complete-animation' : 'task-title';
+    const checkboxTitle = t_js(task.status === 'completed' ? 'js_mark_as_pending' : 'js_mark_as_completed');
+    const editBtnTitle = t_js('js_edit_task_title');
+    const deleteBtnTitle = t_js('js_delete_task_title');
+
 
     if (view === 'grid') {
         taskElement.innerHTML = `
             <div class="task-card-header">
                 <div class="task-status">
-                    <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                    <label class="custom-checkbox-label" title="${checkboxTitle}">
                         <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
                         <span class="custom-checkbox-visual"></span>
                     </label>
@@ -148,15 +154,15 @@ function createTaskElement(task, view = 'list') {
                 ${description ? `<p class="task-description">${description}</p>` : ''}
             </div>
             <div class="task-actions">
-                <button class="edit-task-btn icon-btn" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>
-                <button class="delete-task-btn icon-btn" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+                <button class="edit-task-btn icon-btn" title="${editBtnTitle}"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-task-btn icon-btn" title="${deleteBtnTitle}"><i class="fas fa-trash-alt"></i></button>
             </div>
         `;
     } else {
         taskElement.innerHTML = `
             <div class="task-card-content">
                 <div class="task-header">
-                    <label class="custom-checkbox-label" title="Mark as ${task.status === 'completed' ? 'Pending' : 'Completed'}">
+                    <label class="custom-checkbox-label" title="${checkboxTitle}">
                         <input type="checkbox" class="complete-task-chk visually-hidden" data-id="${task.id}" ${task.status === 'completed' ? 'checked' : ''}>
                         <span class="custom-checkbox-visual"></span>
                     </label>
@@ -169,8 +175,8 @@ function createTaskElement(task, view = 'list') {
                 </div>
             </div>
             <div class="task-actions">
-                <button class="edit-task-btn icon-btn" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>
-                <button class="delete-task-btn icon-btn" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+                <button class="edit-task-btn icon-btn" title="${editBtnTitle}"><i class="fas fa-pencil-alt"></i></button>
+                <button class="delete-task-btn icon-btn" title="${deleteBtnTitle}"><i class="fas fa-trash-alt"></i></button>
             </div>
         `;
     }
@@ -290,8 +296,9 @@ async function handleAddTask(event) {
     };
 
     if (!taskData.title) {
-        if (typeof showMessage === 'function') showMessage(messageElementId, 'Task title cannot be empty.', 'error');
-        else alert('Task title cannot be empty.');
+        const errorMsg = t_js('js_task_title_empty');
+        if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+        else alert(errorMsg);
         return;
     }
 
@@ -316,12 +323,14 @@ async function handleAddTask(event) {
             }
             await loadTasks(); // Reload and apply filters
         } else {
-            if (typeof showMessage === 'function') showMessage(messageElementId, `Failed to add task: ${result.message}`, 'error');
-            else alert(`Failed to add task: ${result.message}`);
+            const errorMsg = t_js('js_fail_add_task', result.message);
+            if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+            else alert(errorMsg);
         }
     } catch (error) {
-        if (typeof showMessage === 'function') showMessage(messageElementId, `Error adding task: ${error.message}.`, 'error');
-        else alert(`Error adding task: ${error.message}.`);
+        const errorMsg = t_js('js_error_add_task', error.message);
+        if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+        else alert(errorMsg);
     } finally {
         if(submitButton) {
             submitButton.disabled = false;
@@ -334,7 +343,7 @@ async function handleAddTask(event) {
  * Handles deleting a task with animation.
  */
 async function handleDeleteTask(taskId) {
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    if (!confirm(t_js('js_confirm_delete_task'))) return;
 
     const taskElement = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
 
@@ -355,13 +364,13 @@ async function handleDeleteTask(taskId) {
                     applyFiltersAndDisplay(); // Re-render
                 }, { once: true });
             } else {
-                 await loadTasks(); // Fallback reload
-            }
-        } else {
-            alert(`Failed to delete task: ${result.message}`);
+                  await loadTasks(); // Fallback reload
+             }
+         } else {
+            alert(t_js('js_fail_delete_task', result.message));
         }
     } catch (error) {
-        alert(`Error deleting task: ${error.message}.`);
+        alert(t_js('js_error_delete_task', error.message));
     }
 }
 
@@ -385,14 +394,14 @@ async function handleToggleComplete(taskId, isComplete) {
             if (taskIndex > -1) {
                 currentTasks[taskIndex].status = newStatus;
             }
-            applyFiltersAndDisplay(); // Re-render
-        } else {
-            alert(`Failed to update task status: ${result.message}`);
+             applyFiltersAndDisplay(); // Re-render
+         } else {
+            alert(t_js('js_fail_update_status', result.message));
             const checkbox = document.querySelector(`.task-card[data-task-id="${taskId}"] .complete-task-chk`);
             if (checkbox) checkbox.checked = !isComplete; // Revert UI
         }
     } catch (error) {
-        alert(`Error updating task status: ${error.message}.`);
+        alert(t_js('js_error_update_status', error.message));
         const checkbox = document.querySelector(`.task-card[data-task-id="${taskId}"] .complete-task-chk`);
         if (checkbox) checkbox.checked = !isComplete; // Revert UI
     }
@@ -406,13 +415,13 @@ async function handleToggleComplete(taskId, isComplete) {
 function openEditModal(taskId) {
     const modal = document.getElementById('edit-task-modal');
     const form = document.getElementById('edit-task-form');
-    if (!modal || !form) return console.error("Edit modal or form not found!");
+    if (!modal || !form) return console.error("Edit modal or form not found!"); // Keep console error in English
 
     const task = currentTasks.find(t => t.id == taskId);
-    if (!task) return alert("Could not find task data to edit.");
+    if (!task) return alert(t_js('js_edit_task_not_found'));
 
     form.querySelector('#edit-task-id').value = task.id;
-    form.querySelector('#edit-task-title').value = task.title;
+    form.querySelector('#edit-task-title').value = task.title; // Populate with existing data, not translation key
     form.querySelector('#edit-task-description').value = task.description || '';
     form.querySelector('#edit-task-priority').value = task.priority;
     form.querySelector('#edit-task-status').value = task.status;
@@ -452,12 +461,13 @@ async function handleEditTaskSubmit(event) {
     };
 
      if (!updatedData.title) {
-        if (typeof showMessage === 'function') showMessage(messageElementId, 'Title cannot be empty.', 'error');
-        else alert('Title cannot be empty.');
+        const errorMsg = t_js('js_task_title_empty'); // Reuse title empty message
+        if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+        else alert(errorMsg);
         return;
     }
 
-    if (typeof showMessage === 'function') showMessage(messageElementId, 'Saving changes...', 'info');
+    if (typeof showMessage === 'function') showMessage(messageElementId, t_js('js_saving_changes'), 'info');
     if(submitButton) {
         submitButton.disabled = true;
         submitButton.classList.add('loading');
@@ -475,12 +485,14 @@ async function handleEditTaskSubmit(event) {
             closeEditModal();
             await loadTasks(); // Reload tasks to reflect changes
         } else {
-            if (typeof showMessage === 'function') showMessage(messageElementId, `Failed to update task: ${result.message}`, 'error');
-            else alert(`Failed to update task: ${result.message}`);
+            const errorMsg = t_js('js_fail_update_task', result.message);
+            if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+            else alert(errorMsg);
         }
     } catch (error) {
-        if (typeof showMessage === 'function') showMessage(messageElementId, `Error updating task: ${error.message}.`, 'error');
-        else alert(`Error updating task: ${error.message}.`);
+        const errorMsg = t_js('js_error_update_task', error.message);
+        if (typeof showMessage === 'function') showMessage(messageElementId, errorMsg, 'error');
+        else alert(errorMsg);
     } finally {
          if(submitButton) {
              submitButton.disabled = false;

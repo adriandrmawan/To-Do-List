@@ -52,4 +52,34 @@ function redirect(string $url): void {
 // - flashMessage()
 // - generateCsrfToken() / verifyCsrfToken()
 
+/**
+ * Translates a given key using the loaded language file.
+ * Returns the key itself if the translation is not found.
+ * Supports variable substitution using sprintf format (e.g., %s, %d).
+ *
+ * Requires the $translations array (loaded in config.php) to be accessible.
+ *
+ * @param string $key The translation key.
+ * @param mixed ...$args Optional arguments for sprintf substitution.
+ * @return string The translated string or the key itself.
+ */
+function t(string $key, ...$args): string {
+    global $translations; // Access the global translations array
+
+    if (isset($translations[$key])) {
+        if (!empty($args)) {
+            // Use sprintf for variable substitution if arguments are provided
+            return sprintf($translations[$key], ...$args);
+        } else {
+            // Return the direct translation if no arguments
+            return $translations[$key];
+        }
+    } else {
+        // Log missing translation key (optional)
+        // error_log("Missing translation key: " . $key);
+        // Return the key itself as a fallback
+        return $key;
+    }
+}
+
 ?>
