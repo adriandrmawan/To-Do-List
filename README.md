@@ -30,7 +30,7 @@ Aplikasi manajemen tugas modern berbasis web dengan autentikasi pengguna dan ant
 1. Install XAMPP dan jalankan layanan Apache + MySQL
 2. Clone repositori ke folder `htdocs`:
 ```bash
-git clone https://github.com/namapengguna/todo-list.git c:/xampp/htdocs/todo-list
+git clone https://github.com/adriandrmawan/todo-list.git c:/xampp/htdocs/todo-list
 ```
 
 ### 2. Setup Database
